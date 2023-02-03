@@ -1,20 +1,39 @@
 <script setup>
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+    import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+    import ProductCard from '@/Components/ProductCard.vue';
+    import { Head, Link, useForm } from '@inertiajs/vue3';
+    import PrimaryButton from '@/Components/PrimaryButton.vue';
+    import DangerButton from '@/Components/DangerButton.vue';
+
+    defineProps({
+        products: Array,
+    });
+
+    const form = useForm({});
+
+    function destroy(id) {
+        console.log('delete:'+id);
+        if (confirm("Are you sure you want to Delete")) {
+            form.delete(route('products.destroy', id));
+        }
+    }
+
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head title="Products Control" />
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Dashboard</h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Products</h2>
         </template>
 
         <div class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900">You're logged in! xxx</div>
+            <div v-if="products != null" class="max-w-7xl mx-auto py-2 sm:px-6 lg:px-8">
+                <div v-for="p in products" class="flex justify-between h-30 px-2 py-2 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <Link :href="route('product', p.id)">
+                        <ProductCard :name="p.title" :description="p.description" :img="p.path" />
+                    </Link>
                 </div>
             </div>
         </div>

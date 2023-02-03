@@ -1,10 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+
+use App\Models\Product;
+use App\Models\Techno;
+use App\Models\Status;
+use App\Models\Event;
+use App\Models\Number;
 
 class ProductController extends Controller
 {
@@ -16,12 +21,37 @@ class ProductController extends Controller
     public function index()
     {
         Log::debug('ProductController::index');
-        $products = Product::all();
+        $products = Product::where('title','<>','none')->get();
         Log::debug('product type:' . gettype($products));
 //        return view('welcome');
-    return Inertia::render('Products', [
+        return Inertia::render('Products', [
             'products' => $products
         ]);
+    }
+
+    public function getProduct($id)
+    {
+        $product = Product::find($id);
+
+        $table= [];
+        $events   = Event::where('product_id', $product->id)->get();
+        $sns= array();
+        foreach ($events as $ev) $sns[]= $ev->sn_n;
+        $evt_sn= [];
+        foreach (array_unique($sns, SORT_NUMERIC) as $n) {
+            $events_sn= Event::where([['product_id',$product->id],['sn_n',$n]])->get()->toArray();
+            $evt_sn+= [$n => $events_sn];
+        }
+        $table+= [$product->id => $evt_sn];
+
+        return Inertia::render('Product', [
+            'product'  => $product,
+            'tables'   => $table,
+            'technos'  => Techno::where('product_id', $product->id)->get(),
+            'status'   => Status::all(),
+            'numbers'  => Number::where('product_id', $product->id)->get(),
+        ]);
+
     }
 
     /**

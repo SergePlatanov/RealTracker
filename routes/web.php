@@ -5,6 +5,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TechnoController;
 use App\Http\Controllers\StatusController;
+use App\Http\Controllers\DashboardController;
 
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -30,11 +31,11 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::resource('products', ProductController::class);
+
+Route::get('/product/{id}', [ProductController::class, 'getProduct'])->name('product');
 
 Route::get('/service', [ServiceController::class, 'index'])->name('service');
 
@@ -50,6 +51,10 @@ Route::resource('technos', TechnoController::class)->only([
 ]);
 
 Route::resource('status', StatusController::class)->only([
+    'edit', 'create', 'update', 'store', 'destroy'
+]);
+
+Route::resource('events', EventsController::class)->only([
     'edit', 'create', 'update', 'store', 'destroy'
 ]);
 

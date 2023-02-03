@@ -15,7 +15,7 @@ class ServiceController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
+        $products = Product::where('title','<>','none')->get();
         $technos = Techno::all();
         $status = Status::all();
         return Inertia::render('Service', [
