@@ -9,10 +9,6 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
 
 use App\Models\Product;
-use App\Models\Techno;
-use App\Models\Status;
-use App\Models\Event;
-use App\Models\Number;
 
 class DashboardController extends Controller
 {

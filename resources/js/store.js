@@ -7,11 +7,15 @@ export const createState = () => {
     const state = reactive({ 
         curProductID: false,
         curTechnoID: false,
+        curTechnos: null,
+        curStatus: null,
     });
     
     const setState = (key, value) => {
         if (key == "CUR_PRODUCT_ID") state.curProductID= value;
         if (key == "CUR_TECHNO_ID")  state.curTechnoID = value;
+        if (key == "CUR_TECHNOS")  state.curTechnos = value;
+        if (key == "CUR_STATUS")  state.curStatus = value;
     };
   
     return { state: readonly(state), setState };
