@@ -23,7 +23,7 @@ return new class extends Migration
             $table->integer('sn_n');
             $table->integer('sn_m');
             $table->integer('sn_p');
-            $table->string('description', 2047)->nulleble()->default(null);
+            $table->string('description', 2047)->nullable()->default(null);
             $table->foreignIdFor(Techno::class);
             $table->foreignIdFor(Status::class);
             $table->boolean('active')->default(true);

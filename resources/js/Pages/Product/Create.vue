@@ -1,5 +1,5 @@
 <script setup>
-import GuestLayout from '@/Layouts/GuestLayout.vue';
+import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
@@ -21,7 +21,7 @@ const submit = () => {
 </script>
 
 <template>
-    <GuestLayout>
+    <AuthenticatedLayout>
         <Head title="Create new product" />
 
         <form @submit.prevent="submit">
@@ -84,5 +84,5 @@ const submit = () => {
                 </Link>
             </div>
         </form>
-    </GuestLayout>
+    </AuthenticatedLayout>
 </template>

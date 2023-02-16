@@ -15,7 +15,7 @@ class EventController extends Controller
     public function create()
     {
         $sn= intval(parse_url(url()->full(), PHP_URL_QUERY));
-        Log::debug("Event::create - q=".$sn);
+        Log::debug("Event::create sn=".$sn);
         return Inertia::render('Event/Create', ['sn' => $sn]);
     }
 
@@ -33,13 +33,11 @@ class EventController extends Controller
         Log::debug("Event::update - " . $id);
         $request->validate([
             'product_id' => 'required|numeric|min:0',
-            'title' => 'required',
-            'order' => 'required|numeric'
         ]);
         
         Event::find($id)->fill($request->post())->save();
 
-        return redirect()->route('product', $request->post()["product_id"])->with('success','Techno has been updated successfully');
+        return redirect()->route('product', $request->post()["product_id"])->with('success','Event has been updated successfully');
     }
 
     public function destroy($id)
@@ -55,13 +53,20 @@ class EventController extends Controller
         Log::debug("Event::store");
         Log::debug($request->post());
 
-        $request->validate([
-            'product_id' => 'required|numeric|min:0',
-        ]);
-
         $id= $request->post()["product_id"];
-        Event::create($request->post());
+        Event::create(        
+            $request->validate([
+                'date'          => 'required|date',
+                'product_id'    => 'required|numeric|min:0',
+                'sn_n'          => 'required|numeric|min:0',
+                'sn_m'          => 'required|numeric|min:0',
+                'sn_p'          => 'required|numeric|min:0',
+                'description'   => '',
+                'techno_id'     => 'required|numeric|min:0',
+                'status_id'     => 'required|numeric|min:0',
+            ])
+        );
 
-        return redirect()->route('product', $id)->with('success','Techno has been created successfully.');
+        return to_route('product', $id)->with('success','Event has been created successfully.');
     }
 }

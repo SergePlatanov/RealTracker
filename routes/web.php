@@ -39,7 +39,7 @@ Route::get('/product/{id}', [ProductController::class, 'getProduct'])->name('pro
 Route::get('/service', [ServiceController::class, 'index'])->name('service');
 
 Route::resource('events', EventController::class)->only([
-    'edit', 'create', 'update', 'store', 'destroy', 'show'
+    'edit', 'create', 'update', 'store', 'destroy'
 ]);
 
 
