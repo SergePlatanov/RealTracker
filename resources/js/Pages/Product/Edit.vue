@@ -45,7 +45,7 @@ const submit = () => {
                             </Link>
                         </div>
 
-                        <form name="createForm" @submit.prevent="submit">
+                        <form name="editForm" @submit.prevent="submit">
                                 <div className="flex flex-col">
                                     <div>
                                         <InputLabel for="title" value="Название" />

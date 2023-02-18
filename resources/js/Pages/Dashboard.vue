@@ -21,7 +21,7 @@
 </script>
 
 <template>
-    <Head title="Products Control" />
+    <Head title="Products" />
 
     <AuthenticatedLayout>
         <template #header>

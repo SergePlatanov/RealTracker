@@ -11,6 +11,32 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\UsersController;
+use App\Http\Controllers\RolesController;
+use App\Http\Controllers\PermissionsController;
+
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\TechnoController;
+use App\Http\Controllers\StatusController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EventController;
+
+Route::group(['middleware' => ['permission:edit product']], function () {
+    //
+});
+
+Route::group(['middleware' => ['permission:edit event']], function () {
+    Route::resource('events', EventController::class)->only([
+        'edit', 'create', 'update', 'store', 'destroy'
+    ]);
+});
+
+Route::group(['middleware' => ['permission:edit techno']], function () {
+    Route::get('/service', [ServiceController::class, 'index'])->name('service');
+});
+
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
                 ->name('register');
@@ -35,7 +61,29 @@ Route::middleware('guest')->group(function () {
                 ->name('password.store');
 });
 
-Route::middleware('auth')->group(function () {
+Route::group(['middleware' => ['auth', 'permission']], function () {
+    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
+                ->name('logout');
+
+    /**
+     * User Routes
+     */
+    Route::resource('users', UsersController::class);
+    /*
+    Route::group(['prefix' => 'users'], function() {
+        Route::get('/', [UsersController::class, 'index'])->name('users.index');
+        Route::get('/create', [UsersController::class, 'create'])->name('users.create');
+        Route::post('/create', [UsersController::class, 'store'])->name('users.store');
+        Route::get('/{user}/show', [UsersController::class, 'show'])->name('users.show');
+        Route::get('/{user}/edit', [UsersController::class, 'edit'])->name('users.edit');
+        Route::patch('/{user}/update', [UsersController::class, 'update'])->name('users.update');
+        Route::delete('/{user}/delete', [UsersController::class, 'destroy'])->name('users.destroy');
+    });*/
+    Route::resource('roles', RolesController::class);
+    Route::resource('permissions', PermissionsController::class);
+
+
+
     Route::get('verify-email', [EmailVerificationPromptController::class, '__invoke'])
                 ->name('verification.notice');
 
@@ -54,6 +102,4 @@ Route::middleware('auth')->group(function () {
 
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 
-    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-                ->name('logout');
 });
