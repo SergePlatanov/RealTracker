@@ -220,7 +220,7 @@
                 <div v-for="(events, sn) in searchTable" class="bg-white overflow-hidden shadow-sm sm:rounded-lg" :key="sn">
                     <div class="flex justify-between items-center pt-5">
                         <h3 class="font-semibold text-lg text-gray-800 m-4 leading-tight">{{getFNumber(sn)}}</h3>
-                        <div class="flex py-2 mr-2">
+                        <div v-if="store.can('edit event')" class="flex py-2 mr-2">
                             <Link
                                 class="px-3 text-4xl text-black rounded-md focus:outline-none"
                                 :href="route('events.create', getLastSN(events))"

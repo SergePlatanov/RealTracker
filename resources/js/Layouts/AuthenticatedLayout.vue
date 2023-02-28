@@ -31,7 +31,7 @@ const showingNavigationDropdown = ref(false);
                             </div>
 
                             <!-- Navigation Links -->
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div v-if="store.can('reading')" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
@@ -43,22 +43,22 @@ const showingNavigationDropdown = ref(false);
                                 </NavLink>
                             </div>
 -->
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div v-if="store.can('edit product')" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('service')" :active="route().current('service')">
                                     Service
                                 </NavLink>
                             </div>
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div v-if="store.can('edit users')" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('users.index')" :active="route().current('users.index')">
                                     Users
                                 </NavLink>
                             </div>
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div v-if="store.can('edit users')" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('permissions.index')" :active="route().current('permissions.index')">
                                     Permissions
                                 </NavLink>
                             </div>
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                            <div v-if="store.can('edit users')" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('roles.index')" :active="route().current('roles.index')">
                                     Roles
                                 </NavLink>

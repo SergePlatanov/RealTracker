@@ -4,9 +4,14 @@
     import { Head, Link, useForm } from '@inertiajs/vue3';
     import PrimaryButton from '@/Components/PrimaryButton.vue';
     import DangerButton from '@/Components/DangerButton.vue';
+    import { onMounted } from 'vue';
+    import { useState } from '@/store';
 
-    defineProps({
+    const store = useState();
+
+    const props= defineProps({
         products: Array,
+        permissions: Array,
     });
 
     const form = useForm({});
@@ -17,6 +22,10 @@
             form.delete(route('products.destroy', id));
         }
     }
+
+    onMounted(() => {
+        store.setState("PERMISSIONS", props.permissions);
+    });
 
 </script>
 

@@ -33,22 +33,9 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name('main');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::get('/product/{id}', [ProductController::class, 'getProduct'])->name('product');
-
-
-Route::resource('technos', TechnoController::class)->only([
-    'edit', 'create', 'update', 'store', 'destroy'
-]);
-
-Route::resource('status', StatusController::class)->only([
-    'edit', 'create', 'update', 'store', 'destroy'
-]);
-
-Route::resource('products', ProductController::class);
 
 
 Route::middleware('auth')->group(function () {

@@ -19,6 +19,7 @@ const props = defineProps({
         :description="props.event.description"
         :techno_id="props.event.techno_id"
         :status_id="props.event.status_id"
+        :file="null"
         :active="props.event.active"
     >
     </EditEvent>

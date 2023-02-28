@@ -23,8 +23,26 @@ use App\Http\Controllers\StatusController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 
+Route::group(['middleware' => ['permission:edit users']], function () {
+    Route::resource('users', UsersController::class);
+    Route::resource('roles', RolesController::class);
+    Route::resource('permissions', PermissionsController::class);
+});
+
+Route::group(['middleware' => ['permission:reading']], function () {
+    Route::get('/product/{id}', [ProductController::class, 'getProduct'])->name('product');
+});
+
 Route::group(['middleware' => ['permission:edit product']], function () {
-    //
+    Route::resource('technos', TechnoController::class)->only([
+        'edit', 'create', 'update', 'store', 'destroy'
+    ]);
+    
+    Route::resource('status', StatusController::class)->only([
+        'edit', 'create', 'update', 'store', 'destroy'
+    ]);
+    
+    Route::resource('products', ProductController::class);
 });
 
 Route::group(['middleware' => ['permission:edit event']], function () {
@@ -61,29 +79,12 @@ Route::middleware('guest')->group(function () {
                 ->name('password.store');
 });
 
-Route::group(['middleware' => ['auth', 'permission']], function () {
+Route::group(['middleware' => ['auth']], function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->name('logout');
+});
 
-    /**
-     * User Routes
-     */
-    Route::resource('users', UsersController::class);
-    /*
-    Route::group(['prefix' => 'users'], function() {
-        Route::get('/', [UsersController::class, 'index'])->name('users.index');
-        Route::get('/create', [UsersController::class, 'create'])->name('users.create');
-        Route::post('/create', [UsersController::class, 'store'])->name('users.store');
-        Route::get('/{user}/show', [UsersController::class, 'show'])->name('users.show');
-        Route::get('/{user}/edit', [UsersController::class, 'edit'])->name('users.edit');
-        Route::patch('/{user}/update', [UsersController::class, 'update'])->name('users.update');
-        Route::delete('/{user}/delete', [UsersController::class, 'destroy'])->name('users.destroy');
-    });*/
-    Route::resource('roles', RolesController::class);
-    Route::resource('permissions', PermissionsController::class);
-
-
-
+Route::group(['middleware' => ['auth', 'permission']], function () {
     Route::get('verify-email', [EmailVerificationPromptController::class, '__invoke'])
                 ->name('verification.notice');
 

@@ -8,7 +8,8 @@ import Combobox from '@/Components/Combobox.vue';
 import TextArea from '@/Components/TextArea.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { computed, ref } from 'vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, Link, useForm, router } from '@inertiajs/vue3';
+//import { Inertia } from "@inertiajs/inertia";
 import { useState } from '@/store';
 import Datepicker from '@vuepic/vue-datepicker';
 import { ru } from 'date-fns/locale';
@@ -28,6 +29,7 @@ const props = defineProps({
     techno_id: Number,
     status_id: Number,
     active: Boolean,
+    file: Object,
 });
 
 const date = ref(new Date());
@@ -50,6 +52,7 @@ const form = useForm({
     techno_id: props.techno_id,
     status_id: props.status_id,
     active: props.active,
+    file: props.file,
 });
 
 function getTechnoNames(items) {
@@ -103,16 +106,49 @@ const proxyStatusID = computed({
     },
 });
 
+var newfile= null;
+
+function FileInput(event)
+{
+    if (event) {
+        console.log("FileInput:" + event.target.files[0]);
+        newfile= event.target.files[0];
+    } else {
+        console.log("FileInput:" + event);
+    }
+}
+/*
+const proxyFile = computed({
+    get() {
+        console.log("proxyFile get");
+        return null;
+    },
+    set(val) {
+        console.log("proxyFile set:" + val);
+        form.file= val[0];
+    },
+});
+*/
 const submit = () => {
     if (form.description === null) form.description= '';
     if (props.IsEdit) {
-        form.put(route('events.update', props.id), {
-//            preserveScroll: (page) => Object.keys(page.props.errors).length,
-//            preserveScroll: true,
+        router.post(route('events.update', props.id), {
+            _method: 'put',
+            date: props.date,
+            product_id: props.product_id,
+            sn_n: props.sn_n,
+            sn_m: props.sn_m,
+            sn_p: props.sn_p,
+            description: props.description,
+            techno_id: props.techno_id,
+            status_id: props.status_id,
+            active: props.active,
+            file: newfile,
         });
     } else {
         form.post(route('events.store'), {
-            onFinish: () => form.reset('description'),
+            file: newfile,
+//            onFinish: () => form.reset('description'),
 //            preserveScroll: (page) => Object.keys(page.props.errors).length,
 //            preserveScroll: true,
         });
@@ -209,8 +245,19 @@ const submit = () => {
                             autocomplete="status_id"
                         />
 
-                        <InputError class="mt-2" :message="form.errors.techno_id" />
+                        <InputError class="mt-2" :message="form.errors.status_id" />
                     </div>
+
+                    <div class="mt-4">
+                        <label v-if="props.IsEdit && props.file">old file: {{props.file}}</label>
+                        <input type="file" @input="FileInput($event)" />
+                        <progress v-if="form.progress" :value="form.progress.percentage" max="100">
+                            {{ form.progress.percentage }}%
+                        </progress>
+
+                        <InputError class="mt-2" :message="form.errors.file" />
+                    </div>
+
 
                     <div class="flex items-center justify-end mt-4">
                         <PrimaryButton class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">

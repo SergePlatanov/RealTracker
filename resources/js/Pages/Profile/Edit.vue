@@ -4,11 +4,21 @@ import DeleteUserForm from './Partials/DeleteUserForm.vue';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
 import { Head } from '@inertiajs/vue3';
+import { onMounted } from 'vue';
+import { useState } from '@/store';
 
-defineProps({
+const store = useState();
+
+const props= defineProps({
     mustVerifyEmail: Boolean,
     status: String,
+    permissions: Array,
 });
+
+onMounted(() => {
+    store.setState("PERMISSIONS", props.permissions);
+});
+
 </script>
 
 <template>

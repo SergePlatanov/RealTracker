@@ -66,8 +66,6 @@ class UsersController extends Controller
             'password_confirmation' => 'same:password'
         ]);
 
-        Log::debug('Role:' . $request->get('role'));
-
         $user= User::create($request->post());
         $user->syncRoles($request->get('role'));
  

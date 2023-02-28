@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Schema;
 use App\Models\Product;
 use App\Models\Techno;
 use App\Models\Status;
+use App\Models\User;
 
 return new class extends Migration
 {
@@ -27,6 +28,7 @@ return new class extends Migration
             $table->foreignIdFor(Techno::class);
             $table->foreignIdFor(Status::class);
             $table->boolean('active')->default(true);
+            $table->foreignIdFor(User::class);
             $table->timestamps();
         });
     }

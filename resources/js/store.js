@@ -11,6 +11,7 @@ export const createState = () => {
         curStatus: null,
         ProductEditEnableSN: -1,
         ProductScroll: 0,
+        permissions: [],
     });
     
     const setState = (key, value) => {
@@ -20,9 +21,15 @@ export const createState = () => {
         if (key == "CUR_STATUS")  state.curStatus = value;
         if (key == "PRODUCT_EDIT_ENABLE_SN")  state.ProductEditEnableSN = value;
         if (key == "PRODUCT_SCROLL")  state.ProductScroll = value;
+        if (key == "PERMISSIONS")  state.permissions = value;
     };
+
+    const can = (permission) => {
+        return state.permissions.find((el) => el.name == permission) !== undefined;
+    }
+
   
-    return { state: readonly(state), setState };
+    return { state: readonly(state), setState, can };
 }
 
 export const useState = () => inject(stateSymbol);
@@ -30,3 +37,4 @@ export const provideState = () => provide(
     stateSymbol, 
     createState()
 );
+

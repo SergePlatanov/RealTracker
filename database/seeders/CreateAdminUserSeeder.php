@@ -1,5 +1,8 @@
 <?php
-
+/**
+* Создание админа и его разрешений
+* php artisan db:seed --class=CreateAdminUserSeeder
+*/
 namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -25,6 +28,7 @@ class CreateAdminUserSeeder extends Seeder
         ]);
     
         $role = Role::create(['name' => 'admin']);
+        Permission::create(['name' => 'edit users']);
 
         $permissions = Permission::pluck('id','id')->all();
            
