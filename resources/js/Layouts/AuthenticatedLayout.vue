@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -11,6 +11,27 @@ import { useState } from '@/store';
 const store = useState();
 
 const showingNavigationDropdown = ref(false);
+
+onMounted(() => {
+/*    
+    if (store.state.permissions.length == 0) {
+        axios.get("/api/permissions")
+        .then((response) => {
+            console.log('permissions:' + response.data.permissions);
+            store.setState("PERMISSIONS", response.data.permissions);
+        })
+        .catch(function (resp) {
+            console.log(resp);
+        });
+    }*/
+
+    if (store.state.permissions.length == 0) {
+        var permissions= JSON.parse(localStorage.getItem("PERMISSIONS")) || [];
+        console.log("restore local perms: " + permissions.length);
+        if (permissions.length) store.setState("PERMISSIONS", permissions);
+    }
+});
+
 </script>
 
 <template>

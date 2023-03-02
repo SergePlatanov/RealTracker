@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rules\Password;
 use Spatie\Permission\Models\Role;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\User;
 use Inertia\Inertia;
 
-use Illuminate\Validation\Rules\Password;
 
 use Illuminate\Support\Facades\Log;
 
@@ -123,4 +124,12 @@ class UsersController extends Controller
         return redirect()->route('users.index')
             ->withSuccess(__('User deleted successfully.'));
     }
+/*
+    public function getPermissions()
+    {
+        Log::debug(Auth::check());
+        return response()->json([
+            'permissions'    => Auth::user() ? Auth::user()->getPermissionsViaRoles() : [],
+        ]);        
+    }*/
 }

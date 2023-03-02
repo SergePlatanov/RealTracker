@@ -17,7 +17,13 @@ const store = useState();
 
 function destroy(id) {
     if(confirm("Are you sure to delete this event?")){
-        form.delete(route('events.destroy', id));
+        form.delete(route('events.destroy', id), {
+            onFinish: () => {
+                    const event = new Event('inertia:deleteEvent');
+                    document.dispatchEvent(event);
+                },
+            preserveScroll: true,
+        });
     }
 }
 

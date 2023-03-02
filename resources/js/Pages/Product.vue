@@ -1,10 +1,10 @@
 <script setup>
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-    import { Head, Link, useForm } from '@inertiajs/vue3';
+    import { Head, Link, useForm, router } from '@inertiajs/vue3';
     import Combobox from '@/Components/Combobox.vue';
     import EventsTable from '@/Pages/Event/EventsTable.vue';
     import ProductCard from '@/Components/ProductCard.vue';
-    import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+    import { ref, computed, onMounted, onBeforeUnmount, onUnmounted } from 'vue';
     import { useState } from '@/store';
     import TextInput from '@/Components/TextInput.vue';
     import InputLabel from '@/Components/InputLabel.vue';
@@ -80,42 +80,52 @@
         store.setState("CUR_STATUS", props.status);
         setTimeout(() => window.scrollTo(0, store.state.ProductScroll), 300);
 //        editEnableSN.value= router.restore('product-editEnableSN');
-//        console.log("onMounted:" + store.state.ProductScroll);
         onSearch();
     });
 
     onBeforeUnmount(() => {
         store.setState("PRODUCT_SCROLL", window.top.scrollY);
-//        console.log("onBeforeUnmount:" + window.top.scrollY);
+        console.log("onBeforeUnmount Product:" + window.top.scrollY);
+        onSearch();
+    });
+
+    let removeDeleteEventListener = router.on('deleteEvent', (event) => {
+        onSearch();
+    });
+
+    onUnmounted(() => {
+        console.log("onUnmounted Product");
+//        removeDeleteEventListener();
     });
 
     const isFiltered= ref(false);
     function onSearch() {
+        console.log("onSearch");
         if (!search.text && !search.sn && !search.fn) {
-            searchTable.value= props.tables[props.product.id];
+            searchTable.value= props.tables;
             isFiltered.value= false;
             return;
         }
 
         var objn= {};
         if (search.sn) {
-            for (var key in props.tables[props.product.id]) {
-                if (props.tables[props.product.id][key][0].sn_n == parseInt(search.sn)) {
-                    objn[key]= props.tables[props.product.id][key];
+            for (var key in props.tables) {
+                if (props.tables[key][0].sn_n == parseInt(search.sn)) {
+                    objn[key]= props.tables[key];
                 }
             }
         }
         if (search.fn) {
-            for (var key in props.tables[props.product.id]) {
-                if (getFNumber(props.tables[props.product.id][key][0].sn_n).includes(search.fn)) {
+            for (var key in props.tables) {
+                if (getFNumber(props.tables[key][0].sn_n).includes(search.fn)) {
                     if (!(key in objn)) {
-                        objn[key]= props.tables[props.product.id][key];
+                        objn[key]= props.tables[key];
                     }
                 }
             }
         }
         if (!search.sn && !search.fn) {
-            objn= props.tables[props.product.id];
+            objn= props.tables;
         }   
 
         var obj= {};
@@ -165,8 +175,8 @@
             </div>
         </template>
         
-        <div class="sticky top-0 max-w-7xl mx-auto sm:px-6 lg:px-8 bg-white overflow-hidden shadow-sm sm:rounded-lg">
-            <div class="flex m-4">
+        <div class="sticky top-0 w-full mx-auto sm:px-6 lg:px-8 bg-white overflow-hidden shadow-sm sm:rounded-lg">
+            <div class="flex max-w-7xl mx-auto my-4 sm:px-6 lg:px-8">
                 <div @click="onViewFilter()" class="cursor-pointer">
                     <div v-if="viewFilter">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6" :class="{'fill-green-600': isFiltered}">
@@ -181,7 +191,7 @@
                 </div>
                 <h3 class="font-semibold text-lg ml-4 text-gray-800 leading-tight">Фильтр</h3>
             </div>
-            <div v-if="viewFilter" class= "p-4 my-2">
+            <div v-if="viewFilter" class= "p-4 max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="flex items-center w-full">
                     <InputLabel for="text" class="mr-2" value="Поиск по тексту" />
                     <TextInput id="text" v-model="search.text" class="mt-1 border-2 mb-2 basis-1/4 w-full"/>

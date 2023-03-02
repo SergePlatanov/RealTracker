@@ -33,18 +33,16 @@ class ProductController extends Controller
     {
         $product = Product::find($id);
 
-        $table= [];
         $events   = Event::where([['product_id', $product->id],['active', true]])->get();
         $sns= array();
         foreach ($events as $ev) { 
             $sns[]= $ev->sn_n;
         }
-        $evt_sn= [];
+        $table= [];
         foreach (array_unique($sns, SORT_NUMERIC) as $n) {
             $events_sn= Event::where([['product_id',$product->id],['sn_n',$n],['active', true]]);
-            $evt_sn+= [$n => $events_sn->get()->toArray()];
+            $table+= [$n => $events_sn->get()->toArray()];
         }
-        $table+= [$product->id => $evt_sn];
 
         return Inertia::render('Product', [
             'product'  => $product,

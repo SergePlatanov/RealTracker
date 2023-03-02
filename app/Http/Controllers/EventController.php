@@ -55,7 +55,6 @@ class EventController extends Controller
                 'file'        => 'file|mimes:txt,txr,rep|max:2048',
             ]);
         }
-
         $evt= Event::find($id);
         $evt->date= $request->input('date');
         $evt->sn_n= $request->input('sn_n');
@@ -79,7 +78,6 @@ class EventController extends Controller
             }
 
             $fileName = time().'.'.$request->file->extension();  
-//            $filePath= $request->file->move(public_path('uploads'), $fileName);
             $filePath = $request->file('file')->storeAs('uploads', $fileName, 'public');
             File::create(  ["name" => $request->file('file')->getClientOriginalName(),
                             "path" => $filePath,

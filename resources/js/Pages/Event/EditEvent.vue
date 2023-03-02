@@ -52,7 +52,7 @@ const form = useForm({
     techno_id: props.techno_id,
     status_id: props.status_id,
     active: props.active,
-    file: props.file,
+    file: null,
 });
 
 function getTechnoNames(items) {
@@ -134,20 +134,20 @@ const submit = () => {
     if (props.IsEdit) {
         router.post(route('events.update', props.id), {
             _method: 'put',
-            date: props.date,
-            product_id: props.product_id,
-            sn_n: props.sn_n,
-            sn_m: props.sn_m,
-            sn_p: props.sn_p,
-            description: props.description,
-            techno_id: props.techno_id,
-            status_id: props.status_id,
-            active: props.active,
+            date: form.date,
+            product_id: form.product_id,
+            sn_n: form.sn_n,
+            sn_m: form.sn_m,
+            sn_p: form.sn_p,
+            description: form.description,
+            techno_id: form.techno_id,
+            status_id: form.status_id,
+            active: form.active,
             file: newfile,
         });
     } else {
+        form.file= newfile;
         form.post(route('events.store'), {
-            file: newfile,
 //            onFinish: () => form.reset('description'),
 //            preserveScroll: (page) => Object.keys(page.props.errors).length,
 //            preserveScroll: true,

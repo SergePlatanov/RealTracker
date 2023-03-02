@@ -25,6 +25,7 @@
 
     onMounted(() => {
         store.setState("PERMISSIONS", props.permissions);
+        localStorage.setItem("PERMISSIONS", JSON.stringify(props.permissions));
     });
 
 </script>
