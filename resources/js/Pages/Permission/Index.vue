@@ -43,9 +43,9 @@
                     <table class="table-auto border-collapse border-slate-400">
                         <thead>
                         <tr class="bg-blue-100">
-                            <th class="table-auto border-collapse border-slate-400">Name</th>
-                            <th class="table-auto border-collapse border-slate-400">Guard</th> 
-                            <th class="table-auto border-collapse border-slate-400" colspan="3" width="1%">Action</th> 
+                            <th class="table-auto border border-collapse border-slate-400">Name</th>
+                            <th class="table-auto border border-collapse border-slate-400">Guard</th> 
+                            <th class="table-auto border border-collapse border-slate-400" colspan="3" width="1%">Action</th> 
                         </tr>
                         </thead>
                         <tbody>

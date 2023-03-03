@@ -47,19 +47,19 @@ function destroy(id) {
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                      <table class="table-auto border-collapse border-slate-400">
                         <thead>
-                        <tr class="bg-blue-100">
-                            <th table-auto border-collapse border-slate-400>#</th>
-                            <th class="border border-slate-300">Name</th>
-                            <th class="border border-slate-300">Users</th>
-                            <th class="border border-slate-300" colspan="2">Action</th>    
-                        </tr>
+                            <tr class="bg-blue-100">
+                                <th class="table-auto border border-collapse border-slate-400">#</th>
+                                <th class="table-auto border border-collapse border-slate-300">Name</th>
+                                <th class="table-auto border border-collapse border-slate-300">Permissions</th>
+                                <th class="table-auto border border-collapse border-slate-300" colspan="2">Action</th>    
+                            </tr>
                         </thead>
                         <tbody>
                             <tr v-for="role in roles">
                                 <td class="border border-slate-300 px-3">{{ role.id }}</td>
                                 <td class="border border-slate-300 px-3">{{ role.name }}</td>
                                 <td class="border border-slate-300 px-3">
-                                    <span v-for="permission in role.permissions" class="badge bg-primary">{{ permission.name }}</span>
+                                    <span v-for="permission in role.permissions" class="badge bg-primary">{{ permission.name }}<br /></span>
                                 </td>
                                 <td class="border border-slate-300 px-3">
                                     <Link

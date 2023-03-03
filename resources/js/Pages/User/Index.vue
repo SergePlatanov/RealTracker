@@ -61,7 +61,7 @@ function destroy(id) {
                                 <td class="border border-slate-300 px-3">{{ user.name }}</td>
                                 <td class="border border-slate-300 px-3">{{ user.email }}</td>
                                 <td class="border border-slate-300 px-3">
-                                    <span v-for="role in user.roles" class="badge bg-primary">{{ role.name }}</span>
+                                    <span v-for="role in user.roles" class="badge bg-primary">{{ role.name }}<br /></span>
                                 </td>
                                 <td class="border border-slate-300 px-3">
                                     <Link

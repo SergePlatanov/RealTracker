@@ -32,6 +32,10 @@ class RolesController extends Controller
     public function index(Request $request)
     {
         $roles = Role::all();
+        foreach ($roles as $role) {
+            $role->permissions;
+        }
+
         return Inertia::render('Role/Index', compact('roles'));
 //            ->with('i', ($request->input('page', 1) - 1) * 5);
     }

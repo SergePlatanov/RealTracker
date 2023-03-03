@@ -40,7 +40,7 @@ class ProductController extends Controller
         }
         $table= [];
         foreach (array_unique($sns, SORT_NUMERIC) as $n) {
-            $events_sn= Event::where([['product_id',$product->id],['sn_n',$n],['active', true]]);
+            $events_sn= Event::where([['product_id',$product->id],['sn_n',$n],['active', true]])->orderBy('date', 'asc');
             $table+= [$n => $events_sn->get()->toArray()];
         }
 

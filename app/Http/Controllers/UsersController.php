@@ -102,8 +102,6 @@ class UsersController extends Controller
     {
         $user->update($request->validated());
 
-        Log::debug('Role:' . implode("#", $request->get('role')));
-
         $user->syncRoles($request->get('role'));
 
         return redirect()->route('users.index')

@@ -226,8 +226,8 @@
         </div>
 
         <div v-if="searchTable" class="py-12">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div v-for="(events, sn) in searchTable" class="bg-white overflow-hidden shadow-sm sm:rounded-lg" :key="sn">
+            <div class="max-w-7xl bg-white pb-12 mx-auto sm:px-6 lg:px-8 sm:rounded-lg">
+                <div v-for="(events, sn) in searchTable" class="overflow-hidden shadow-sm sm:rounded-lg" :key="sn">
                     <div class="flex justify-between items-center pt-5">
                         <h3 class="font-semibold text-lg text-gray-800 m-4 leading-tight">{{getFNumber(sn)}}</h3>
                         <div v-if="store.can('edit event')" class="flex py-2 mr-2">

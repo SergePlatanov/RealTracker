@@ -31,7 +31,10 @@ function getSN(event) {
     var sn = "0000" + event.sn_n;
     var sm = "000"  + event.sn_m;
     var sp = "000"  + event.sn_p;
-    return sp.substring(sp.length-3) + '-' + sm.substring(sm.length-3) + '-' + sn.substring(sn.length-4);
+    var n= '';
+    if (event.sn_p >= 0) n+= sp.substring(sp.length-3) + '-';
+    if (event.sn_m >= 0) n+= sm.substring(sm.length-3) + '-';
+    return  n + sn.substring(sn.length-4);
 }
 
 function getTechno(event) {
@@ -51,7 +54,7 @@ function getStatus(event) {
     <div class="row">
         <div class="col-12">
             <div class="card-body">
-                <div class="table-responsive select-none">
+                <div class="table-responsive">
                     <table v-if="events.length > 0" class="mx-5 table-auto border-collapse border border-slate-400">
                         <thead>
                             <tr class="bg-blue-100">
@@ -70,7 +73,7 @@ function getStatus(event) {
                                          'bg-red-200'   : (getStatus(event) == 'failure')
                                         }"
                             >
-                                <td class="border border-slate-300 px-3">{{ event.date }}</td>
+                                <td class="border border-slate-300 px-3">{{ event.date == '1990-01-01' ? '' : event.date }}</td>
                                 <td class="border border-slate-300 px-3">{{ getSN(event) }}</td>
                                 <td class="border border-slate-300 px-3">{{ getTechno(event) }}</td>
                                 <td class="border border-slate-300 px-3" v-html="event.description"></td>
