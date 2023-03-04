@@ -11,6 +11,7 @@ export const createState = () => {
         curStatus: null,
         ProductEditEnableSN: -1,
         ProductScroll: 0,
+        ProductFilter: [],
         permissions: [],
     });
     
@@ -22,6 +23,12 @@ export const createState = () => {
         if (key == "PRODUCT_EDIT_ENABLE_SN")  state.ProductEditEnableSN = value;
         if (key == "PRODUCT_SCROLL")  state.ProductScroll = value;
         if (key == "PERMISSIONS")  state.permissions = value;
+        if (key == "PRODUCT_FILTER") {
+            const iterator= value.keys();
+            for (const key of iterator) {
+                state.ProductFilter[key]= value[key];
+            }            
+        }
     };
 
     const can = (permission) => {

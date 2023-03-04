@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
-
+use Illuminate\Support\Facades\Storage;
 use App\Models\Product;
 use App\Models\Techno;
 use App\Models\Status;
@@ -13,6 +13,7 @@ use App\Models\Number;
 
 class ProductController extends Controller
 {
+    public $defaultPath= '/image/default.png';
    /**
     * Display a listing of the resource.
     *
@@ -77,10 +78,21 @@ class ProductController extends Controller
         $request->validate([
             'title' => 'required',
             'description' => 'required',
-            'path' => 'required',
         ]);
         
-        Product::create($request->post());
+        if ($request->hasFile('file')) {
+            $request->validate([
+                    'file'        => 'file|image|max:2048',
+            ]);
+        }
+
+        $filePath= $this->defaultPath;
+        if ($request->hasFile('file')) {
+            $fileName = time().'-'.$request->file->getClientOriginalName();  
+            $filePath = $request->file('file')->storeAs('uploads', $fileName, 'public');
+        }
+
+        $product= Product::create(array_merge($request->post(), ['path' => $filePath]));
 
         return redirect()->route('service')->with('success','Product has been created successfully.');
     }
@@ -114,10 +126,32 @@ class ProductController extends Controller
         $request->validate([
             'title' => 'required',
             'description' => 'required',
-            'path' => 'required',
         ]);
         
-        Product::find($id)->fill($request->post())->save();
+
+        if ($request->hasFile('file')) {
+            $request->validate([
+                'file'        => 'file|image|max:2048',
+            ]);
+        }
+
+        $p= Product::find($id);
+
+        // https://laravel.com/docs/9.x/filesystem
+        if ($request->hasFile('file')) {
+            // delete old file
+            if ($p->path != $this->defaultPath && Storage::exists($p->path)) {
+                Storage::delete($p->path);
+            }
+
+            $fileName = time().'-'.$request->file->getClientOriginalName();  
+            $filePath = $request->file('file')->storeAs('uploads', $fileName, 'public');
+            $p->path  = $filePath;
+        }
+
+        $p->title= $request->input('title');
+        $p->description= $request->input('description');
+        $p->update();
 
         return redirect()->route('service')->with('success','Product has been updated successfully');
     }

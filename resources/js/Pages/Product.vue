@@ -11,15 +11,54 @@
 
     const store = useState();
 
+    const props= defineProps({
+        product: Object,
+        tables: Object,
+        technos: Array,
+        status: Array,
+        numbers: Array,
+    });
+/*
+    const saveSearch= useRemember({
+        text: '',
+        sn: '',
+        fn: '',
+    }, `Product:${props.product.id}`);*/
+
     const search= useForm({
         text: '',
         sn: '',
         fn: '',
     });
 
+    function saveFilter()
+    {
+        var arr= [];
+        arr[props.product.id]= {
+                text: search.text,
+                sn: search.sn,
+                fn: search.fn,
+            };
+        store.setState("PRODUCT_FILTER", arr);
+    }
+
+    function getFilter()
+    {
+        const arr= store.state.ProductFilter;
+        if (arr[props.product.id]) {
+            search.text = arr[props.product.id].text;
+            search.sn   = arr[props.product.id].sn;
+            search.fn   = arr[props.product.id].fn;
+        }
+    }
+
     const searchTable= ref(null);
 
     const editEnableSN= ref(store.state.ProductEditEnableSN);
+
+    let viewTable = computed(() => {
+        return searchTable.value !== null;
+    });
 
     function swEdit(sn) {
         if (editEnableSN.value != sn) {
@@ -37,14 +76,6 @@
 //        console.log('getEditable: '+ editEnableSN.value + ' ' + sn + '  t:' + (typeof editEnableSN.value) + ' - ' + (typeof sn));
         return editEnableSN.value === sn;
     };
-
-    const props= defineProps({
-        product: Object,
-        tables: Array,
-        technos: Array,
-        status: Array,
-        numbers: Array,
-    });
 
     function getFNumber(sn) {
         var num= props.numbers.findLast(function (el) {
@@ -80,13 +111,13 @@
         store.setState("CUR_STATUS", props.status);
         setTimeout(() => window.scrollTo(0, store.state.ProductScroll), 300);
 //        editEnableSN.value= router.restore('product-editEnableSN');
+        getFilter();
         onSearch();
     });
 
     onBeforeUnmount(() => {
         store.setState("PRODUCT_SCROLL", window.top.scrollY);
         console.log("onBeforeUnmount Product:" + window.top.scrollY);
-        onSearch();
     });
 
     let removeDeleteEventListener = router.on('deleteEvent', (event) => {
@@ -104,6 +135,7 @@
         if (!search.text && !search.sn && !search.fn) {
             searchTable.value= props.tables;
             isFiltered.value= false;
+            saveFilter();
             return;
         }
 
@@ -143,12 +175,14 @@
             searchTable.value= objn;
         }
         isFiltered.value= true;
+        saveFilter();
     }
 
     function onSearchReset() {
         search.text= ''; 
         search.sn= '';
         search.fn= '';
+        console.log("onSearchReset");
         onSearch();
     }
 
@@ -170,8 +204,16 @@
 
     <AuthenticatedLayout>
         <template #header>
-            <div class="font-semibold text-xl text-gray-800 leading-tight">
-                <ProductCard :name="product.title" :description="product.description" :img="product.path" />
+            <div class="flex justify-between font-semibold text-xl text-gray-800 leading-tight">
+                <ProductCard :name="product.title" :description="product.description" :img="'/storage/'+product.path" />
+                <Link
+                    class="px-3 py-2 mr-2 focus:outline-none"
+                    :href="route('events.create')"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                    <path fill-rule="evenodd" d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z" clip-rule="evenodd" />
+                    </svg>
+                </Link>
             </div>
         </template>
         
@@ -189,7 +231,7 @@
                         </svg>
                     </div>
                 </div>
-                <h3 class="font-semibold text-lg ml-4 text-gray-800 leading-tight">Фильтр</h3>
+                <h3 class="font-semibold text-lg ml-4 text-gray-800 leading-tight" :class="{'text-green-600': isFiltered}">Фильтр</h3>
             </div>
             <div v-if="viewFilter" class= "p-4 max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="flex items-center w-full">
@@ -225,7 +267,7 @@
             </div>
         </div>
 
-        <div v-if="searchTable" class="py-12">
+        <div v-if="viewTable" class="py-12">
             <div class="max-w-7xl bg-white pb-12 mx-auto sm:px-6 lg:px-8 sm:rounded-lg">
                 <div v-for="(events, sn) in searchTable" class="overflow-hidden shadow-sm sm:rounded-lg" :key="sn">
                     <div class="flex justify-between items-center pt-5">
@@ -261,16 +303,6 @@
                     </EventsTable>
                 </div>
             </div>
-        </div>
-        <div v-else class="px-3">
-            <Link
-                class="px-3 py-2 mr-2 focus:outline-none"
-                :href="route('events.create')"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                <path fill-rule="evenodd" d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z" clip-rule="evenodd" />
-                </svg>
-            </Link>
         </div>
     </AuthenticatedLayout>
 </template>

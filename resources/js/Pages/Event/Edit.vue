@@ -20,7 +20,7 @@ const props = defineProps({
         :techno_id="props.event.techno_id"
         :status_id="props.event.status_id"
         :file="null"
-        :active="props.event.active"
+        :active="props.event.active==1"
     >
     </EditEvent>
 </template>

@@ -80,7 +80,7 @@
 
                 <div v-if="products != null" class="max-w-7xl mx-auto py-2 sm:px-6 lg:px-8">
                     <div v-for="p in products" class="flex justify-between h-30 px-2 py-2 overflow-hidden shadow-sm sm:rounded-lg">
-                        <ProductCard :name="p.title" :description="p.description" :img="p.path" />
+                        <ProductCard :name="p.title" :description="p.description" :img="'/storage/'+p.path" />
                         <div class="flex flex-col justify-around">
                             <Link
                                 tabIndex="1"

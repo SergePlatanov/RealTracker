@@ -78,7 +78,7 @@ class EventController extends Controller
             }
 
             $fileName = time().'.'.$request->file->extension();  
-            $filePath = $request->file('file')->storeAs('uploads', $fileName, 'public');
+            $filePath = $request->file('file')->storeAs('uploads/'.$evt->product_id, $fileName, 'public');
             File::create(  ["name" => $request->file('file')->getClientOriginalName(),
                             "path" => $filePath,
                             "event_id" => $evt->id,
@@ -132,7 +132,7 @@ class EventController extends Controller
             $fileName = time().'.'.$request->file->extension();  
 //            $filePath= $request->file->move(public_path('uploads'), $fileName);
 
-            $filePath = $request->file('file')->storeAs('uploads', $fileName, 'public');
+            $filePath = $request->file('file')->storeAs('uploads/'.$id, $fileName, 'public');
             File::create(  ["name" => $request->file('file')->getClientOriginalName(),
                             "path" => $filePath,
                             "event_id" => $evt->id,

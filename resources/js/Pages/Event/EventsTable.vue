@@ -55,14 +55,14 @@ function getStatus(event) {
         <div class="col-12">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table v-if="events.length > 0" class="mx-5 table-auto border-collapse border border-slate-400">
+                    <table v-if="events.length > 0" class="table-auto w-full border-collapse border border-slate-400">
                         <thead>
                             <tr class="bg-blue-100">
-                                <th class="border border-slate-300">Date</th>
-                                <th class="border border-slate-300">S/N</th>
+                                <th class="w-32 border border-slate-300">Date</th>
+                                <th class="w-36 border border-slate-300">S/N</th>
                                 <th class="border border-slate-300">Techno</th>
-                                <th class="w-full border border-slate-300">Title</th>
-                                <th class="w-full border border-slate-300">Files</th>
+                                <th class="border border-slate-300">Title</th>
+                                <th class="border border-slate-300">Files</th>
                                 <th v-if="editEnable" class="border border-slate-300">Action</th>
                             </tr>
                         </thead>
@@ -96,14 +96,15 @@ function getStatus(event) {
                                         </svg>
                                     </Link>
 
-                                    <Link
+                                    <div
                                         @click="destroy(event.id)"
                                         tabIndex="-1"
+                                        class="cursor-pointer"
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6 fill-red-600">
                                         <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clip-rule="evenodd" />
                                         </svg>
-                                    </Link>
+                                    </div>
 
                                 </td>
 
