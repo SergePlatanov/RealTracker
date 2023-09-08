@@ -5,7 +5,6 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TechnoController;
 use App\Http\Controllers\StatusController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\RolesController;
@@ -35,7 +34,7 @@ Route::get('/', function () {
     ]);
 })->name('main');
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/main', [ProductController::class, 'index'])->middleware(['auth', 'verified'])->name('main');
 
 
 Route::middleware('auth')->group(function () {

@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Product;
 use App\Models\Techno;
@@ -21,13 +22,17 @@ class ProductController extends Controller
     */
     public function index()
     {
-        Log::debug('ProductController::index');
-        $products = Product::where('title','<>','none')->get();
-        Log::debug('product type:' . gettype($products));
-//        return view('welcome');
-        return Inertia::render('Products', [
-            'products' => $products
-        ]);
+        $user= Auth::user();
+
+        if ($user->can('reading')) {
+            $products = Product::where('title','<>','none')->get();
+            return Inertia::render('Dashboard', [
+                'products' => $products,
+                'permissions' => Auth::user()->getPermissionsViaRoles(),
+                ]);
+        } else {
+            return redirect()->route('profile.edit');
+        }
     }
 
     public function getProduct($id)

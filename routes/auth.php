@@ -20,7 +20,6 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TechnoController;
 use App\Http\Controllers\StatusController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 
 Route::group(['middleware' => ['permission:edit users']], function () {
