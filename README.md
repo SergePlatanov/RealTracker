@@ -14,6 +14,22 @@ sudo apt-get install curl
 curl -sL https://deb.nodesource.com/setup_16.x | sudo bash -
 sudo apt-get install nodejs
 
+## Ставим tailwnd
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+В файл tailwind.config.js добавляем<br>
+>module.exports = {<br>
+>  content: [<br>
+>>    "./resources/**/*.blade.php",<br>
+>>    "./resources/**/*.js",<br>
+>>    "./resources/**/*.vue",<br>
+>  ],
+>  theme: {<br>
+>    extend: {},<br>
+>  },<br>
+>  plugins: [],<br>
+>}
+
 ## Генерируем ключ
 php artisan key:generate
 
@@ -28,6 +44,6 @@ mysql -u fuser -p  factorydb < db.sql
 1. Копируем папку image
 2. Делаем символьную ссылку на папку \storage\app\public<br>
    cd public<br>
-   ln -s storage/public storage
+   ln -s ../storage/app/public storage
    
 
