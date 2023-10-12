@@ -17,3 +17,17 @@ sudo apt-get install nodejs
 ## Генерируем ключ
 php artisan key:generate
 
+## Установка пакетов и зависимостей
+php composer.phar install<br>
+npm unstall
+
+## Восстанавливаем базу данных
+mysql -u fuser -p  factorydb < db.sql
+
+## Восстанавливаем public
+1. Копируем папку image
+2. Делаем символьную ссылку на папку \storage\app\public<br>
+   cd public<br>
+   ln -s storage/public storage
+   
+
