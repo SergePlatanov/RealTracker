@@ -9,6 +9,19 @@ APP_DEBUG пока можем оставить true<br>
 APP_URL указываем доменное имя https://xxx.xxx.com<br>
 DB_xxx - меняем все значения, их берем у хостинг провайдера<br>
 
+Ставим composer локально
+инструкция https://getcomposer.org/download/
+
+sudo apt-get update
+sudo apt-get install php8.2-intl php-zip php-fpm php-mysql php-gd php-bcmath
+sudo apt-get install php8.2-sqlite3
+php composer.phar update
+
+sudo service nginx restart
+
+генерируем ключ
+php artisan key:generate
+
 ## Ставим node.js
 sudo apt-get install curl
 curl -sL https://deb.nodesource.com/setup_16.x | sudo bash -
@@ -35,7 +48,9 @@ php artisan key:generate
 
 ## Установка пакетов и зависимостей
 php composer.phar install<br>
-npm unstall
+npm install
+
+https://laravel.com/docs/11.x/upgrade#sanctum
 
 ## Восстанавливаем базу данных
 mysql -u fuser -p  factorydb < db.sql

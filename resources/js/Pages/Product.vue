@@ -16,7 +16,6 @@
         tables: Object,
         technos: Array,
         status: Array,
-        numbers: Array,
     });
 /*
     const saveSearch= useRemember({
@@ -52,6 +51,8 @@
         }
     }
 
+    const factoryNumberID= ref(null);
+
     const searchTable= ref(null);
 
     const editEnableSN= ref(store.state.ProductEditEnableSN);
@@ -78,11 +79,16 @@
     };
 
     function getFNumber(sn) {
-        var num= props.numbers.findLast(function (el) {
-            return el.product_id === props.product.id && el.serial == sn;
-        });
-
-        return num ? num.factory : 's/n:'+sn;
+        var fn= 's/n:'+sn;
+        for (var key in props.tables) {
+//            console.log('sn_n: ' + props.tables[key][0].sn_n);
+            if (props.tables[key][0].sn_n == sn) {
+                props.tables[key].forEach((el) => {
+                    if (el.techno_id == factoryNumberID.value) fn= el.description;
+                })
+            }
+        }
+        return fn;
     }
 
     function getEvents(sn) {
@@ -113,6 +119,11 @@
 //        editEnableSN.value= router.restore('product-editEnableSN');
         getFilter();
         onSearch();
+
+        var t= props.technos.find(function (el) {
+            return el.title == 'установка заводского номера';
+        });
+        factoryNumberID.value= t.id;
     });
 
     onBeforeUnmount(() => {

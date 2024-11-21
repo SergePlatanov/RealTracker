@@ -10,7 +10,6 @@ use App\Models\Product;
 use App\Models\Techno;
 use App\Models\Status;
 use App\Models\Event;
-use App\Models\Number;
 
 class ProductController extends Controller
 {
@@ -55,7 +54,6 @@ class ProductController extends Controller
             'tables'   => $table,
             'technos'  => Techno::where('product_id', $product->id)->get(),
             'status'   => Status::all(),
-            'numbers'  => Number::where('product_id', $product->id)->get(),
         ]);
 
     }

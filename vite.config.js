@@ -17,4 +17,17 @@ export default defineConfig({
             },
         }),
     ],
+    resolve: { // настроить предварительную компиляцию шаблонов Vue
+        alias: {
+            'vue': 'vue/dist/vue.esm-bundler.js'
+        }
+    },
+    css: {
+        preprocessorOptions: {
+            scss: {
+            api: 'modern-compiler' // or "modern"
+            }
+        }
+    }
+
 });

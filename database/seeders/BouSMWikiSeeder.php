@@ -81,7 +81,7 @@ class BouSMWikiSeeder extends Seeder
                         if (count($r)) {
                             // смена серийного номера
                             $action[]= array('date' => $d, 
-                                             'sn'   => $sn, 
+                                             'sn'   => $sna, 
                                              'text' => "смена серийного номера на {".$this->getSN(0, $sna)."-".$this->getSN(1, $sna)."-".$this->getSN(2, $sna)."}");
                             $sn= $sna;
                         }
