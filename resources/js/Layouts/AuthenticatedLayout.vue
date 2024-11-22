@@ -56,6 +56,9 @@ onMounted(() => {
                                 <NavLink :href="route('main')" :active="route().current('main')">
                                     Products
                                 </NavLink>
+                                <NavLink v-if="store.state.curProductID" class="ml-0" :href="route('product',store.state.curProductID)" :active="route().current('product',store.state.curProductID)">
+                                    {{store.state.curProductName}}
+                                </NavLink>
                             </div>
 <!--                            
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">

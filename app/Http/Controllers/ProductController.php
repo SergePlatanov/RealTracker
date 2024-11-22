@@ -26,8 +26,8 @@ class ProductController extends Controller
         if ($user->can('reading')) {
             $products = Product::where('title','<>','none')->get();
             return Inertia::render('Dashboard', [
-                'products' => $products,
-                'permissions' => Auth::user()->getPermissionsViaRoles(),
+                    'products' => $products,
+                    'permissions' => Auth::user()->getPermissionsViaRoles(),
                 ]);
         } else {
             return redirect()->route('profile.edit');

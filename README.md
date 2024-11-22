@@ -61,4 +61,5 @@ mysql -u fuser -p  factorydb < db.sql
    cd public<br>
    ln -s ../storage/app/public storage
    
+## Перенос в Docker
 

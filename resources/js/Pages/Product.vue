@@ -84,7 +84,7 @@
 //            console.log('sn_n: ' + props.tables[key][0].sn_n);
             if (props.tables[key][0].sn_n == sn) {
                 props.tables[key].forEach((el) => {
-                    if (el.techno_id == factoryNumberID.value) fn= el.description;
+                    if (el.techno_id == factoryNumberID.value) fn= el.description ? el.description : 's/n:'+sn;
                 })
             }
         }
@@ -113,6 +113,7 @@
 
     onMounted(() => {
         store.setState("CUR_PRODUCT_ID", props.product.id);
+        store.setState("CUR_PRODUCT_NAME", props.product.title);
         store.setState("CUR_TECHNOS", props.technos);
         store.setState("CUR_STATUS", props.status);
         setTimeout(() => window.scrollTo(0, store.state.ProductScroll), 300);
@@ -123,7 +124,7 @@
         var t= props.technos.find(function (el) {
             return el.title == 'установка заводского номера';
         });
-        factoryNumberID.value= t.id;
+        factoryNumberID.value= t ? t.id : null;
     });
 
     onBeforeUnmount(() => {
@@ -150,40 +151,47 @@
             return;
         }
 
-        var objn= {};
+        var objsn= {};
         if (search.sn) {
             for (var key in props.tables) {
                 if (props.tables[key][0].sn_n == parseInt(search.sn)) {
-                    objn[key]= props.tables[key];
+                    objsn[key]= props.tables[key];
+                    break;
                 }
             }
+        } else {
+            objsn= props.tables;
         }
+        var objfn= {};
         if (search.fn) {
-            for (var key in props.tables) {
-                if (getFNumber(props.tables[key][0].sn_n).includes(search.fn)) {
-                    if (!(key in objn)) {
-                        objn[key]= props.tables[key];
+            for (var key in objsn) {
+                var fn= getFNumber(objsn[key][0].sn_n);
+                if (fn.includes(search.fn)) {
+                    if (!(key in objfn)) {
+                        objfn[key]= objsn[key];
                     }
                 }
             }
-        }
-        if (!search.sn && !search.fn) {
-            objn= props.tables;
+        } else {
+            objfn= objsn;
         }   
 
-        var obj= {};
+        var objtx= {};
         if (search.text) {
-            for (var key in objn) {
-                const a=objn[key].filter((el, idx) => {
-                        return el.description.includes(search.text);
-                    });
-                if (a.length) {
-                    obj[key]= a;
-                }
+            for (var key in objfn) {
+                const a= objfn[key].every(el => {
+                    if (el.description && el.description.includes(search.text)) {
+                        if (!(key in objtx)) {
+                            objtx[key]= objfn[key];
+                            return false;
+                        }
+                    }
+                    return true;
+                });
             }
-            searchTable.value= obj;
+            searchTable.value= objtx;
         } else {
-            searchTable.value= objn;
+            searchTable.value= objfn;
         }
         isFiltered.value= true;
         saveFilter();
@@ -243,20 +251,28 @@
                     </div>
                 </div>
                 <h3 class="font-semibold text-lg ml-4 text-gray-800 leading-tight" :class="{'text-green-600': isFiltered}">Фильтр</h3>
+                <div class= "flex px-4 max-w-7xl ml-8 sm:px-6 lg:px-8" :class="{'text-green-700': isFiltered}">
+                    <div class= "flex px-4" v-if="search.sn">{{'сн:' + search.sn}}</div>
+                    <div class= "flex px-4" v-if="search.fn">{{'зн:' + search.fn}}</div>
+                    <div class= "flex px-4" v-if="search.text">{{'текс:' + search.text}}</div>
+                    <svg v-if="isFiltered" clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-6 h-6 cursor-pointer" :class="{'fill-green-600': isFiltered}" @click="onSearchReset()">
+                        <path d="m12 10.93 5.719-5.72c.146-.146.339-.219.531-.219.404 0 .75.324.75.749 0 .193-.073.385-.219.532l-5.72 5.719 5.719 5.719c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.385-.073-.531-.219l-5.719-5.719-5.719 5.719c-.146.146-.339.219-.531.219-.401 0-.75-.323-.75-.75 0-.192.073-.384.22-.531l5.719-5.719-5.72-5.719c-.146-.147-.219-.339-.219-.532 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"/>
+                    </svg>
+                </div>
             </div>
             <div v-if="viewFilter" class= "p-4 max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="flex items-center w-full">
                     <InputLabel for="text" class="mr-2" value="Поиск по тексту" />
-                    <TextInput id="text" v-model="search.text" class="mt-1 border-2 mb-2 basis-1/4 w-full"/>
+                    <TextInput id="text" v-model="search.text" @keyup.enter="onSearch()" class="mt-1 border-2 mb-2 basis-1/4 w-full"/>
                 </div>
                 <div class="flex">
                     <div class="flex items-center mr-4">
-                        <InputLabel for="sn" class="mr-2" value="Поиск по серийномуномеру" />
-                        <TextInput id="sn" v-model="search.sn" class="mt-1 mb-2 border-2 basis-1/4 w-full"/>
+                        <InputLabel for="sn" class="mr-2" value="Поиск по серийному номеру" />
+                        <TextInput id="sn" v-model="search.sn" @keyup.enter="onSearch()" class="mt-1 mb-2 border-2 basis-1/4 w-full"/>
                     </div>
                     <div class="flex items-center">
                         <InputLabel for="fn" class="mr-2" value="Поиск по заводскому номеру" />
-                        <TextInput id="fn" v-model="search.fn" class="mt-1 mb-2 border-2 basis-1/4 w-full"/>
+                        <TextInput id="fn" v-model="search.fn" @keyup.enter="onSearch()" class="mt-1 mb-2 border-2 basis-1/4 w-full"/>
                     </div>
                 </div>
                 <div class="flex">
