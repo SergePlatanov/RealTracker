@@ -36,7 +36,7 @@ Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
-        'appVersion' => getAppVersion(),
+        'appVersion' => config('app.name') . ' ' . getAppVersion(),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
