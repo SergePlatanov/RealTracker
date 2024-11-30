@@ -31,23 +31,23 @@ $proxy_scheme = getenv('PROXY_SCHEME');
 if (!empty($proxy_scheme)) {
    URL::forceScheme($proxy_scheme);
 }
-
+/*
 Route::get('/', function () {
     return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
+        'canLogin' => true,//Route::has('login'),
         'canRegister' => Route::has('register'),
         'appVersion' => config('app.name') . ' ' . getAppVersion(),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
 })->name('main');
+*/
 
-Route::get('/main', [ProductController::class, 'index'])->middleware(['auth', 'verified'])->name('main');
-
+/*
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
+*/
 require __DIR__.'/auth.php';

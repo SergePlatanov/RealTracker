@@ -16,6 +16,8 @@
         tables: Object,
         technos: Array,
         status: Array,
+        enableEdit: Boolean,
+        enableAdmin: Boolean
     });
 /*
     const saveSearch= useRemember({
@@ -221,11 +223,11 @@
 <template>
     <Head title="Product" />
 
-    <AuthenticatedLayout>
+    <AuthenticatedLayout :enableAdmin="enableAdmin">
         <template #header>
             <div class="flex justify-between font-semibold text-xl text-gray-800 leading-tight">
                 <ProductCard :name="product.title" :description="product.description" :img="'/storage/'+product.path" />
-                <Link
+                <Link v-if="enableEdit"
                     class="px-3 py-2 mr-2 focus:outline-none"
                     :href="route('events.create')"
                 >
@@ -299,7 +301,7 @@
                 <div v-for="(events, sn) in searchTable" class="overflow-hidden shadow-sm sm:rounded-lg" :key="sn">
                     <div class="flex justify-between items-center pt-5">
                         <h3 class="font-semibold text-lg text-gray-800 m-4 leading-tight">{{getFNumber(sn)}}</h3>
-                        <div v-if="store.can('edit event')" class="flex py-2 mr-2">
+                        <div v-if="enableEdit" class="flex py-2 mr-2">
                             <Link
                                 class="px-3 text-4xl text-black rounded-md focus:outline-none"
                                 :href="route('events.create', getLastSN(events))"

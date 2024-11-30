@@ -24,7 +24,7 @@ export const createState = () => {
         if (key == "CUR_STATUS")  state.curStatus = value;
         if (key == "PRODUCT_EDIT_ENABLE_SN")  state.ProductEditEnableSN = value;
         if (key == "PRODUCT_SCROLL")  state.ProductScroll = value;
-        if (key == "PERMISSIONS")  state.permissions = value;
+//        if (key == "PERMISSIONS")  state.permissions = value;
         if (key == "PRODUCT_FILTER") {
             const iterator= value.keys();
             for (const key of iterator) {
@@ -33,12 +33,12 @@ export const createState = () => {
         }
     };
 
-    const can = (permission) => {
-        return state.permissions.find((el) => el.name == permission) !== undefined;
-    }
+//    const can = (permission) => {
+//        return state.permissions.find((el) => el.name == permission) !== undefined;
+//    }
 
   
-    return { state: readonly(state), setState, can };
+    return { state: readonly(state), setState };
 }
 
 export const useState = () => inject(stateSymbol);

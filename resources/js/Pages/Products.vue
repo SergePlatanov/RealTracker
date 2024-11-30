@@ -11,7 +11,7 @@
 
     const props= defineProps({
         products: Array,
-        permissions: Array,
+        enableAdmin: Boolean,
     });
 
     const form = useForm({});
@@ -24,18 +24,18 @@
     }
 
     onMounted(() => {
-        store.setState("PERMISSIONS", props.permissions);
-        localStorage.setItem("PERMISSIONS", JSON.stringify(props.permissions));
+//        store.setState("PERMISSIONS", props.permissions);
+//        localStorage.setItem("PERMISSIONS", JSON.stringify(props.permissions));
     });
 
 </script>
 
 <template>
-    <Head title="Products" />
+    <Head title="Продукция" />
 
-    <AuthenticatedLayout>
+    <AuthenticatedLayout :enableAdmin="enableAdmin">
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Products</h2>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Продукция</h2>
         </template>
 
         <div class="py-12">

@@ -62,4 +62,24 @@ mysql -u fuser -p  factorydb < db.sql
    ln -s ../storage/app/public storage
    
 ## Перенос в Docker
+1. В папке realtracker
+docker compose down
+2. Удаляем все кроме:
+- Папки docker-compose
+- файла docker-compose.yml
+- файла Dockerfile
+- .env
+3. Копируем проект в папку
+4. Создаем символьную метку
+   ln -s ../storage/app/public storage
+5. Права
+   sudo chmod g+wr -R /opt/RealTracker/storage/app/RealTracker
+   sudo chmod g+wr -R /opt/RealTracker/storage/logs
+6. Запускаем Docker
+docker compose up -d --build
+
+## Выполнение команд внутри докера:
+docker compose exec app sh
+docker compose exec db sh
+
 

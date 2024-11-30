@@ -55,9 +55,9 @@ const form = useForm({
     file: null,
 });
 
-function getTechnoNames(items) {
+function getTechnoNames() {
     const arr= [];
-    items.forEach((el) => { arr.push(el.title); });
+    store.state.curTechnos.forEach((el) => { if (el.deleted_at == null) arr.push(el.title); });
     return arr;
 }
 
@@ -79,16 +79,21 @@ const proxyTechnoID = computed({
     },
 });
 
+function getCurStatus()
+{
+    return store.state.curStatus.filter(el => (el.techno_id == form.techno_id && el.deleted_at == null));
+}
+
 function getStatusNames() {
     const arr= [];
-    const sts= store.state.curStatus.filter(el => el.techno_id == form.techno_id);
+    const sts= getCurStatus();
     sts.forEach((el) => { arr.push(el.title); });
     return arr;
 }
 
 const proxyStatusID = computed({
     get() {
-        const sts= store.state.curStatus.filter(el => el.techno_id == form.techno_id);
+        const sts= getCurStatus();
         var Index= false;
         var t= sts.find((el, key) =>  {
             if (el.id === form.status_id)  {
@@ -101,7 +106,7 @@ const proxyStatusID = computed({
         return Index;
     },
     set(val) {
-        const sts= store.state.curStatus.filter(el => el.techno_id == form.techno_id);
+        const sts= getCurStatus();
         form.status_id= sts[val].id;
     },
 });
@@ -227,7 +232,7 @@ const submit = () => {
                                 <Combobox 
                                     id="techno_id"
                                     class= "mt-1" 
-                                    :items="getTechnoNames(store.state.curTechnos)" 
+                                    :items="getTechnoNames()" 
                                     v-model:selected="proxyTechnoID"
                                     required
                                     autocomplete="techno_id"

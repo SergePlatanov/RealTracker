@@ -4,11 +4,17 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
+import NavLinkAdmin from '@/Components/NavLinkAdmin.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
+import ResponsiveNavLinkAdmin from '@/Components/ResponsiveNavLinkAdmin.vue';
 import { Link } from '@inertiajs/vue3';
 import { useState } from '@/store';
 
 const store = useState();
+
+const props= defineProps({
+        enableAdmin: Boolean,
+    });
 
 const showingNavigationDropdown = ref(false);
 
@@ -44,7 +50,7 @@ onMounted(() => {
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <Link :href="route('main')">
+                                <Link :href="route('home')">
                                     <ApplicationLogo
                                         class="block h-9 w-auto fill-current text-gray-800"
                                     />
@@ -52,13 +58,22 @@ onMounted(() => {
                             </div>
 
                             <!-- Navigation Links -->
-                            <div v-if="store.can('reading')" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('main')" :active="route().current('main')">
-                                    Products
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLink :href="route('home')" :active="route().current('home')">
+                                    Продукция
                                 </NavLink>
+                            </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink v-if="store.state.curProductID" class="ml-0" :href="route('product',store.state.curProductID)" :active="route().current('product',store.state.curProductID)">
                                     {{store.state.curProductName}}
                                 </NavLink>
+                            </div>
+
+                            <div v-if="enableAdmin" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <NavLinkAdmin href="/admin">
+                                    Настройки
+                                </NavLinkAdmin>
                             </div>
 <!--                            
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
@@ -66,12 +81,7 @@ onMounted(() => {
                                     Product
                                 </NavLink>
                             </div>
--->
-                            <div v-if="store.can('edit product')" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('service')" :active="route().current('service')">
-                                    Service
-                                </NavLink>
-                            </div>
+
                             <div v-if="store.can('edit users')" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                                 <NavLink :href="route('users.index')" :active="route().current('users.index')">
                                     Users
@@ -87,7 +97,7 @@ onMounted(() => {
                                     Roles
                                 </NavLink>
                             </div>
-
+-->
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -119,11 +129,12 @@ onMounted(() => {
                                     </template>
 
                                     <template #content>
-                                        <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink>
+<!--                                        <DropdownLink :href="route('profile.edit')"> Profile </DropdownLink> -->
                                         <DropdownLink :href="route('logout')" method="post" as="button">
                                             Log Out
                                         </DropdownLink>
                                     </template>
+
                                 </Dropdown>
                             </div>
                         </div>
@@ -167,9 +178,15 @@ onMounted(() => {
                     class="sm:hidden"
                 >
                     <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('main')" :active="route().current('main')">
-                            Products
+                        <ResponsiveNavLink :href="route('home')" :active="route().current('home')">
+                            Продукция
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink v-if="store.state.curProductID" class="ml-0" :href="route('product',store.state.curProductID)" :active="route().current('product',store.state.curProductID)">
+                            {{store.state.curProductName}}
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLinkAdmin v-if="enableAdmin" href="/admin">
+                            Настройки
+                        </ResponsiveNavLinkAdmin>
                     </div>
 
                     <!-- Responsive Settings Options -->
@@ -180,13 +197,14 @@ onMounted(() => {
                             </div>
                             <div class="font-medium text-sm text-gray-500">{{ $page.props.auth.user.email }}</div>
                         </div>
-
+<!--
                         <div class="mt-3 space-y-1">
                             <ResponsiveNavLink :href="route('profile.edit')"> Profile </ResponsiveNavLink>
                             <ResponsiveNavLink :href="route('logout')" method="post" as="button">
                                 Log Out
                             </ResponsiveNavLink>
                         </div>
+-->
                     </div>
                 </div>
             </nav>

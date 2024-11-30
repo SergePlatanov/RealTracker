@@ -14,6 +14,12 @@ use App\Models\Event;
 class ProductController extends Controller
 {
     public $defaultPath= '/image/default.png';
+
+    protected function enableAdmin()
+    {
+        return Auth::user()->can("edit product") || Auth::user()->can("edit user");
+    }
+
    /**
     * Display a listing of the resource.
     *
@@ -25,9 +31,9 @@ class ProductController extends Controller
 
         if ($user->can('reading')) {
             $products = Product::where('title','<>','none')->get();
-            return Inertia::render('Dashboard', [
-                    'products' => $products,
-                    'permissions' => Auth::user()->getPermissionsViaRoles(),
+            return Inertia::render('Products', [
+                    'products'    => $products,
+                    'enableAdmin' => $this->enableAdmin(),
                 ]);
         } else {
             return redirect()->route('profile.edit');
@@ -50,10 +56,12 @@ class ProductController extends Controller
         }
 
         return Inertia::render('Product', [
-            'product'  => $product,
-            'tables'   => $table,
-            'technos'  => Techno::where('product_id', $product->id)->get(),
-            'status'   => Status::all(),
+            'product'     => $product,
+            'tables'      => $table,
+            'technos'     => Techno::withTrashed()->where('product_id', $product->id)->get(),
+            'status'      => Status::withTrashed()->get(),
+            'enableEdit'  => auth()->user()->can('edit event'),
+            'enableAdmin' => $this->enableAdmin(),
         ]);
 
     }
