@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:22
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
@@ -13,4 +13,4 @@ USER node
 EXPOSE 5173
 
 # https://github.com/vitejs/vite/discussions/3396
-CMD ["sh", "-c", "npm install && npm run dev -- --host"]
+CMD ["sh", "-c", "npm install && npm run dev"]

@@ -1,4 +1,4 @@
-FROM php:8.0-fpm
+FROM php:8.2-fpm
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     locales \
     libonig-dev \
+    libxml2-dev \
     zip \
     libzip-dev \
     jpegoptim optipng pngquant gifsicle \
@@ -15,9 +16,9 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl && \
-    pecl install xdebug-3.0.1 && \
+    pecl install xdebug-3.4.0 && \
     docker-php-ext-enable xdebug && \
-    docker-php-ext-install pdo_mysql mbstring zip exif pcntl && \
+    docker-php-ext-install pdo_mysql pdo mbstring zip exif pcntl intl bcmath gd && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install gd && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \

@@ -34,18 +34,20 @@ services:
 
   # MySQL контейнер
   db:
-    image: mysql:5.7.22
+#    image: "mysql/mysql-server:8.0"
+    image: mysql:latest
     restart: unless-stopped
     tty: true
     ports:
       - "3306:3306"
     command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci','--default-authentication-plugin=mysql_native_password']
     environment:
-      # Желаемые настройки для СУБД MySQL
-      MYSQL_DATABASE: laravel
-      MYSQL_ROOT_PASSWORD: 'root'
-      MYSQL_USER: 'appuser'
-      MYSQL_PASSWORD: 'appuser'
+        MYSQL_DATABASE: '${DB_DATABASE}'
+        MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+        MYSQL_PASSWORD: '${DB_PASSWORD}'
+        MYSQL_USER: '${DB_USERNAME}'
+        SERVICE_TAGS: dev
+        SERVICE_NAME: mysql
     volumes:
       - dbdata:/var/lib/mysql # Используем именованный том из блока volumes
       - ./docker/mysql/my.cnf:/etc/mysql/my.cnf # Передаем в контейнер конфигурационный файл
@@ -69,3 +71,7 @@ volumes:
   # Чтобы данные БД не пропадали после выключения создаем именованный том
   dbdata:
     driver: local
+    driver_opts:
+      type: none
+      device: "./docker/mysql/db"
+      o: bind
