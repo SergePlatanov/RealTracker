@@ -31,7 +31,7 @@ $proxy_scheme = getenv('PROXY_SCHEME');
 if (!empty($proxy_scheme)) {
    URL::forceScheme($proxy_scheme);
 }
-/*
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => true,//Route::has('login'),
@@ -40,8 +40,8 @@ Route::get('/', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-})->name('main');
-*/
+})->name('home');
+
 
 /*
 Route::middleware('auth')->group(function () {

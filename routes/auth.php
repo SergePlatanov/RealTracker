@@ -25,7 +25,7 @@ use App\Http\Controllers\EventController;
 use Filament\FilamentManager;
 
 Route::group(['middleware' => ['auth','permission:reading']], function () {
-    Route::get('/', [ProductController::class, 'index'])->name('home');
+    Route::get('/products', [ProductController::class, 'index'])->name('products');
     Route::get('/product/{id}', [ProductController::class, 'getProduct'])->name('product');
 });
 
@@ -60,12 +60,12 @@ Route::group(['middleware' => ['permission:edit techno']], function () {
 });
 */
 Route::middleware('guest')->group(function () {
-    Route::get('login', [AuthenticatedSessionController::class, 'create'])
+/*    Route::get('login', [AuthenticatedSessionController::class, 'create'])
                 ->name('login');
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
-/*
+
     Route::get('register', [RegisteredUserController::class, 'create'])
                 ->name('register');
 

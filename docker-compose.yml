@@ -1,4 +1,3 @@
-version: '3.8'
 services:
 
   # Backend контейнер
@@ -17,6 +16,8 @@ services:
       - ./docker/backend/php.ini:/usr/local/etc/php/php.ini
     depends_on:
       - db
+    networks:
+      - realtracker
 
   # Nginx контейнер для вебсервера
   nginx:
@@ -31,6 +32,8 @@ services:
       - ./docker/nginx/conf.d/:/etc/nginx/conf.d/ # Передаем в контейнер конфигурационные файлы nginx
     depends_on:
       - backend
+    networks:
+      - realtracker
 
   # MySQL контейнер
   db:
@@ -40,10 +43,10 @@ services:
     tty: true
     ports:
       - "3306:3306"
-    command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci','--default-authentication-plugin=mysql_native_password']
+    command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci'] #'--default-authentication-plugin=mysql_native_password']
     environment:
         MYSQL_DATABASE: '${DB_DATABASE}'
-        MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+        MYSQL_ROOT_PASSWORD: 'root'
         MYSQL_PASSWORD: '${DB_PASSWORD}'
         MYSQL_USER: '${DB_USERNAME}'
         SERVICE_TAGS: dev
@@ -53,6 +56,8 @@ services:
       - ./docker/mysql/my.cnf:/etc/mysql/my.cnf # Передаем в контейнер конфигурационный файл
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping" ]
+    networks:
+       - realtracker
 
   # Для сборки js
   node:
@@ -65,6 +70,12 @@ services:
     working_dir: /var/www
     volumes:
         - .:/var/www # Монтируем локальную папку в контейнер как /var/www
+    networks:
+       - realtracker
+
+networks:
+    realtracker:
+        driver: bridge
 
 # Тома
 volumes:
@@ -73,5 +84,5 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: "./docker/mysql/db"
+      device: "./docker/mysql/dbdata"
       o: bind

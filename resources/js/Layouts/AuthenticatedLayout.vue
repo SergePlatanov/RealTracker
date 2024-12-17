@@ -59,7 +59,7 @@ onMounted(() => {
 
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('home')" :active="route().current('home')">
+                                <NavLink :href="route('products')" :active="route().current('products')">
                                     Продукция
                                 </NavLink>
                             </div>
@@ -178,7 +178,7 @@ onMounted(() => {
                     class="sm:hidden"
                 >
                     <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('home')" :active="route().current('home')">
+                        <ResponsiveNavLink :href="route('products')" :active="route().current('products')">
                             Продукция
                         </ResponsiveNavLink>
                         <ResponsiveNavLink v-if="store.state.curProductID" class="ml-0" :href="route('product',store.state.curProductID)" :active="route().current('product',store.state.curProductID)">
