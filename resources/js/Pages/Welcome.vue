@@ -17,16 +17,17 @@ defineProps({
         class="relative flex items-top justify-center min-h-screen bg-white sm:items-center sm:pt-0"
     >
         <div v-if="canLogin" class="fixed top-0 right-0 px-6 py-4 sm:block">
+<!--                v-if="$page.props.auth.user" -->
             <Link
-                v-if="$page.props.auth.user"
                 :href="route('products')"
                 class="text-sm text-gray-700 dark:text-gray-500 underline"
                 >Products</Link
             >
-
+<!--
             <template v-else>
-                <Link :href="route('login')" class="text-sm text-gray-700 dark:text-gray-500 underline">Log in</Link>
+                <a href="/admin/login" class="text-sm text-gray-700 dark:text-gray-500 underline">Log in</a>
             </template>
+-->
         </div>
 
         <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
