@@ -28,6 +28,10 @@ RUN apt-get update && apt-get install -y \
 # Add user for laravel application
 RUN groupadd -g 1000 www && useradd -u 1000 -ms /bin/bash -g www www
 
+#WORKDIR /var/www
+#COPY . ./
+#RUN chown -R www:www-data /var/www
+
 # Change current user to www
 USER www
 
