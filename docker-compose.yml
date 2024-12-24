@@ -6,8 +6,8 @@ services:
     build:
       context: .
       dockerfile: ./docker-compose/backend/Dockerfile
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+#    extra_hosts:
+#      - "host.docker.internal:host-gateway"
     restart: unless-stopped
     tty: true
     working_dir: /var/www

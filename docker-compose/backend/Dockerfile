@@ -1,39 +1,47 @@
-FROM php:8.2-fpm
+# Use the official PHP image as a base
+FROM php:8.2-fpm-alpine
 
-# Install dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
+# Set working directory
+WORKDIR /var/www
+
+# Install system dependencies
+RUN apk --no-cache add \
+    build-base \
     libpng-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
-    locales \
-    libonig-dev \
-    libxml2-dev \
-    zip \
+    libjpeg-turbo-dev \
+    libwebp-dev \
+    libxpm-dev \
+    freetype-dev \
     libzip-dev \
-    jpegoptim optipng pngquant gifsicle \
-    vim \
+    zip \
     unzip \
     git \
-    curl && \
-    pecl install xdebug-3.4.0 && \
-    docker-php-ext-enable xdebug && \
-    docker-php-ext-install pdo_mysql pdo mbstring zip exif pcntl intl bcmath gd && \
-    docker-php-ext-configure gd --with-freetype --with-jpeg && \
-    docker-php-ext-install gd && \
-    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
-    # Clear cache
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+    bash \
+    fcgi \
+    libmcrypt-dev \
+    oniguruma-dev \
+    postgresql-dev
 
-# Add user for laravel application
-RUN groupadd -g 1000 www && useradd -u 1000 -ms /bin/bash -g www www
+# Clear cache
+RUN rm -rf /var/cache/apk/*
 
-#WORKDIR /var/www
-#COPY . ./
-#RUN chown -R www:www-data /var/www
+# Install PHP extensions
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+    && docker-php-ext-install gd \
+    && docker-php-ext-install pdo pdo_mysql pdo_pgsql mbstring zip exif pcntl bcmath opcache
+
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Copy existing application directory contents
+#COPY . /var/www
+
+# Copy existing application directory permissions
+#COPY --chown=www-data:www-data . /var/www
+
 
 # Change current user to www
-USER www
+#USER www-data
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000

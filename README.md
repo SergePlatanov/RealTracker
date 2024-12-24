@@ -5,7 +5,7 @@
 Добавить в /etc/hosts запись:
 
 ```
-127.0.0.1 vue3-laravel-app.local
+127.0.0.1 realtracker.local
 ```
 
 Запустить проект в docker:
@@ -17,7 +17,7 @@ docker compose up -d
 Установить зависимости composer:
 
 ```
-docker compose exec backend composer install
+docker compose exec app composer install
 ```
 
 Создать .env:
@@ -29,13 +29,13 @@ cp .env.example .env
 Сгенерировать ключ приложения:
 
 ```
-docker compose exec backend php artisan key:generate
+docker compose exec app php artisan key:generate
 ```
 
 Выполнить миграции:
 
 ```
-docker compose exec backend php artisan migrate
+docker compose exec app php artisan migrate
 ```
 
 Открыть в браузере http://vue3-laravel-app.local
@@ -156,3 +156,13 @@ docker compose exec app sh
 docker compose exec db sh
 
 
+## Полезные ссылки
+### Создание более легких образов Docker в проекте Laravel Sail
+```
+https://forums.docker.com/t/making-lighter-docker-images-on-laravel-sail-project/141544
+```
+### FPM start
+https://stackoverflow.com/questions/72918264/php-fpm-does-not-start-after-container-creation
+
+### Use the official PHP image as a base
+https://laracasts.com/discuss/channels/laravel/production-php-fpm-alpine-image-for-laravel
