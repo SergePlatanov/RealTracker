@@ -25,6 +25,13 @@ RUN apt-get update && apt-get install -y \
     # Clear cache
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+ARG INSTALL_MYSQL_CLIENT=false
+
+RUN if [ ${INSTALL_MYSQL_CLIENT} = true ]; then \
+    apt-get update -yqq && \
+    apt-get -y install mariadb-client \
+;fi
+
 # Add user for laravel application
 RUN groupadd -g 1000 www && useradd -u 1000 -ms /bin/bash -g www www
 
@@ -32,9 +39,13 @@ RUN groupadd -g 1000 www && useradd -u 1000 -ms /bin/bash -g www www
 #COPY . ./
 #RUN chown -R www:www-data /var/www
 
-# Change current user to www
-USER www
+WORKDIR /var/www/public
+RUN ln -s ../storage/app/public storage
 
+# Change current user to www
+# USER www
+
+WORKDIR /var/www
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
 CMD ["php-fpm"]

@@ -131,8 +131,7 @@ mysql -u fuser -p  factorydb < db.sql
 ## Восстанавливаем public
 1. Копируем папку image
 2. Делаем символьную ссылку на папку \storage\app\public<br>
-   cd public<br>
-   ln -s ../storage/app/public storage
+   ln -s ../storage/app/public public/storage
    
 ## Перенос в Docker
 1. В папке realtracker

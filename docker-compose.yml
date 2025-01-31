@@ -5,6 +5,8 @@ services:
     # Для установки нужных пакетов используем не чистый образ, а инструкции из конкретного файла Dockerfile
     build:
       context: .
+      args:
+        - INSTALL_MYSQL_CLIENT=${WORKSPACE_INSTALL_MYSQL_CLIENT}
       dockerfile: ./docker-compose/backend/Dockerfile
     extra_hosts:
       - "host.docker.internal:host-gateway"

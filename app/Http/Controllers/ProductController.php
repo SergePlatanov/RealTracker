@@ -13,7 +13,7 @@ use App\Models\Event;
 
 class ProductController extends Controller
 {
-    public $defaultPath= '/image/default.png';
+    public $defaultPath= '/uploads/default.png';
 
     protected function enableAdmin()
     {

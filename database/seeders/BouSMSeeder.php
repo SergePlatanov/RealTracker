@@ -74,7 +74,7 @@ class BouSMSeeder extends Seeder
         $db = new Product;
         $db->title       = "БОУ-СМ";
         $db->description = "БОУ для комплекса ПВО Панцирь-СМ, заказчик КБП";
-        $db->path        = "\image\bou-sm.jpg";
+        $db->path        = "\storage\uploads\bou-sm.jpg";
         $db->save();
         return $db->id;
     }
