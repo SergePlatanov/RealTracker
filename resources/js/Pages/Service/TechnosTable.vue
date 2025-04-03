@@ -1,7 +1,7 @@
 <script setup>
 import { Link, useForm } from '@inertiajs/vue3';
-import { useState } from '@/store';
 import { computed } from 'vue';
+import {useMainStore} from '@/Stores/MainStore.js';
 
 const props = defineProps({
     technos: Array,
@@ -10,7 +10,7 @@ const props = defineProps({
 
 const form = useForm({});
 
-const store = useState();
+const mainStore = useMainStore();
 
 function destroy(id) {
     if(confirm("Are you sure to delete this techno?")){
@@ -18,16 +18,16 @@ function destroy(id) {
     }
 }
 
-const proxyTechnos = computed(() => props.technos.filter(el => el.product_id === store.state.curProductID));
+const proxyTechnos = computed(() => props.technos.filter(el => el.product_id === mainStore.curProductID));
 
 function getCurProductTitle() {
-    console.log("curProductID:" + store.state.curProductID);
-    var p= props.products.find(function isIDEquals(el) { return el.id === store.state.curProductID });
+    console.log("curProductID:" + mainStore.curProductID);
+    var p= props.products.find(function isIDEquals(el) { return el.id === mainStore.curProductID });
     return p ? p.title : "";
 }
 
 function selectRow(id) {
-    store.setState("CUR_TECHNO_ID", id);
+    mainStore.curTechnoID= id;
 }
 
 </script>
@@ -47,7 +47,7 @@ function selectRow(id) {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(techno,key) in proxyTechnos" :key="key" @click="selectRow(techno.id)" :class="{'bg-green-200': (techno.id == store.state.curTechnoID)}">
+                            <tr v-for="(techno,key) in proxyTechnos" :key="key" @click="selectRow(techno.id)" :class="{'bg-green-200': (techno.id == mainStore.curTechnoID)}">
                                 <td class="border border-slate-300 px-3">{{ techno.title }}</td>
                                 <td class="border border-slate-300 text-center">{{ techno.order }}</td>
                                 <td class="border flex border-slate-300">

@@ -1,13 +1,7 @@
 <script setup>
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
     import ProductCard from '@/Components/ProductCard.vue';
-    import { Head, Link, useForm } from '@inertiajs/vue3';
-    import PrimaryButton from '@/Components/PrimaryButton.vue';
-    import DangerButton from '@/Components/DangerButton.vue';
-    import { onMounted } from 'vue';
-    import { useState } from '@/store';
-
-    const store = useState();
+    import { useForm } from '@inertiajs/vue3';
 
     const props= defineProps({
         products: Array,
@@ -22,12 +16,6 @@
             form.delete(route('products.destroy', id));
         }
     }
-
-    onMounted(() => {
-//        store.setState("PERMISSIONS", props.permissions);
-//        localStorage.setItem("PERMISSIONS", JSON.stringify(props.permissions));
-    });
-
 </script>
 
 <template>

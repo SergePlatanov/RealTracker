@@ -5,11 +5,11 @@
     import EventsTable from '@/Pages/Event/EventsTable.vue';
     import ProductCard from '@/Components/ProductCard.vue';
     import { ref, computed, onMounted, onBeforeUnmount, onUnmounted } from 'vue';
-    import { useState } from '@/store';
     import TextInput from '@/Components/TextInput.vue';
     import InputLabel from '@/Components/InputLabel.vue';
+    import {useMainStore} from '@/Stores/MainStore.js';
 
-    const store = useState();
+    const mainStore = useMainStore();
 
     const props= defineProps({
         product: Object,
@@ -40,12 +40,12 @@
                 sn: search.sn,
                 fn: search.fn,
             };
-        store.setState("PRODUCT_FILTER", arr);
+        mainStore.ProductFilter= arr;
     }
 
     function getFilter()
     {
-        const arr= store.state.ProductFilter;
+        const arr= mainStore.ProductFilter;
         if (arr[props.product.id]) {
             search.text = arr[props.product.id].text;
             search.sn   = arr[props.product.id].sn;
@@ -57,7 +57,7 @@
 
     const searchTable= ref(null);
 
-    const editEnableSN= ref(store.state.ProductEditEnableSN);
+    const editEnableSN= ref(mainStore.ProductEditEnableSN);
 
     let viewTable = computed(() => {
         return searchTable.value !== null;
@@ -69,7 +69,7 @@
         } else {
             editEnableSN.value= -1;
         }
-        store.setState("PRODUCT_EDIT_ENABLE_SN", editEnableSN.value);
+        mainStore.ProductEditEnableSN= editEnableSN.value;
 //        router.remember(editEnableSN.value, 'product-editEnableSN');
 
 //        console.log('swEdit: '+ editEnableSN.value + '  t:' + (typeof editEnableSN.value) + ' - ' + (typeof sn));
@@ -114,12 +114,11 @@
     }
 
     onMounted(() => {
-        store.setState("CUR_PRODUCT_ID", props.product.id);
-        store.setState("CUR_PRODUCT_NAME", props.product.title);
-        store.setState("CUR_TECHNOS", props.technos);
-        store.setState("CUR_STATUS", props.status);
-        setTimeout(() => window.scrollTo(0, store.state.ProductScroll), 300);
-//        editEnableSN.value= router.restore('product-editEnableSN');
+        mainStore.curProductID= props.product.id;
+        mainStore.curProductName= props.product.title;
+        mainStore.curTechnos= props.technos;
+        mainStore.curStatus= props.status;
+        setTimeout(() => window.scrollTo(0, mainStore.ProductScroll), 300);
         getFilter();
         onSearch();
 
@@ -130,7 +129,7 @@
     });
 
     onBeforeUnmount(() => {
-        store.setState("PRODUCT_SCROLL", window.top.scrollY);
+        mainStore.ProductScroll= window.top.scrollY;
         console.log("onBeforeUnmount Product:" + window.top.scrollY);
     });
 

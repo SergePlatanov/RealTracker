@@ -1,7 +1,9 @@
 <script setup>
 import { Link, useForm } from '@inertiajs/vue3';
-import { useState } from '@/store';
 import { computed } from 'vue';
+import {useMainStore} from '@/Stores/MainStore.js';
+
+const mainStore = useMainStore();
 
 const props = defineProps({
     status: Array,
@@ -10,9 +12,7 @@ const props = defineProps({
 
 const form = useForm({});
 
-const store = useState();
-
-const proxyStatus = computed(() => props.status.filter(el => el.techno_id === store.state.curTechnoID));
+const proxyStatus = computed(() => props.status.filter(el => el.techno_id === mainStore.curTechnoID));
 
 function destroy(id) {
     if(confirm("Are you sure to delete this status?")){

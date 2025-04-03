@@ -6,12 +6,12 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import SecondaryButton from '@/Components/SecondaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
-import { useState } from '@/store';
+import {useMainStore} from '@/Stores/MainStore.js';
 
-const store= useState();
+const mainStore = useMainStore();
 
 const form = useForm({
-    product_id: store.state.curProductID,
+    product_id: mainStore.curProductID,
     title: '',
     order: 0,
 });

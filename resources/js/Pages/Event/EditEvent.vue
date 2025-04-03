@@ -10,12 +10,12 @@ import TextInput from '@/Components/TextInput.vue';
 import { computed, ref } from 'vue';
 import { Head, Link, useForm, router } from '@inertiajs/vue3';
 //import { Inertia } from "@inertiajs/inertia";
-import { useState } from '@/store';
 import Datepicker from '@vuepic/vue-datepicker';
 //import { ru } from 'date-fns/locale';
 import '@vuepic/vue-datepicker/dist/main.css';
+import {useMainStore} from '@/Stores/MainStore.js';
 
-const store = useState();
+const mainStore = useMainStore();
 
 const props = defineProps({
     IsEdit: Boolean,
@@ -57,14 +57,14 @@ const form = useForm({
 
 function getTechnoNames() {
     const arr= [];
-    store.state.curTechnos.forEach((el) => { if (el.deleted_at == null) arr.push(el.title); });
+    mainStore.curTechnos?.forEach((el) => { if (el.deleted_at == null) arr.push(el.title); });
     return arr;
 }
 
 const proxyTechnoID = computed({
     get() {
         var Index= false;
-        var t= store.state.curTechnos.find((el, key) =>  {
+        var t= mainStore.curTechnos?.find((el, key) =>  {
             if (el.id === form.techno_id)  {
                 Index= key;
                 return true;
@@ -75,19 +75,19 @@ const proxyTechnoID = computed({
         return Index;
     },
     set(val) {
-        form.techno_id= store.state.curTechnos[val].id;
+        form.techno_id= mainStore.curTechnos[val].id;
     },
 });
 
 function getCurStatus()
 {
-    return store.state.curStatus.filter(el => (el.techno_id == form.techno_id && el.deleted_at == null));
+    return mainStore.curStatus?.filter(el => (el.techno_id == form.techno_id && el.deleted_at == null));
 }
 
 function getStatusNames() {
     const arr= [];
     const sts= getCurStatus();
-    sts.forEach((el) => { arr.push(el.title); });
+    sts?.forEach((el) => { arr.push(el.title); });
     return arr;
 }
 
@@ -95,7 +95,7 @@ const proxyStatusID = computed({
     get() {
         const sts= getCurStatus();
         var Index= false;
-        var t= sts.find((el, key) =>  {
+        var t= sts?.find((el, key) =>  {
             if (el.id === form.status_id)  {
                 Index= key;
                 return true;
@@ -116,7 +116,7 @@ var newfile= null;
 function FileInput(event)
 {
     if (event) {
-        console.log("FileInput:" + event.target.files[0]);
+//        console.log("FileInput:" + event.target.files[0]);
         newfile= event.target.files[0];
     } else {
         console.log("FileInput:" + event);
@@ -270,7 +270,7 @@ const submit = () => {
                                     {{props.IsEdit ? "Сохранить" : "Добавить"}}
                                 </PrimaryButton>
                                 <Link
-                                    :href="route('product', store.state.curProductID)"
+                                    :href="route('product', mainStore.curProductID)"
                                     method="get"
                                     as="button"
                                     class="ml-3 underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

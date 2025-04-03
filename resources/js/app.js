@@ -5,9 +5,10 @@ import { createApp, h } from 'vue';
 import { createInertiaApp, Head, Link } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
-import { stateSymbol, createState } from './store';
+import { createPinia } from 'pinia';
 
 const appName = import.meta.env.VITE_APP_NAME || 'title not found';
+const pinia = createPinia();
 
 createInertiaApp({
     title: (title) => title != '' ? `${title} - ${appName}` : `${appName}`,
@@ -18,9 +19,9 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
+            .use(pinia)
             .component('Head', Head)
             .component('Link', Link)
-            .provide(stateSymbol, createState())
             .mount(el);
     },
     progress: {

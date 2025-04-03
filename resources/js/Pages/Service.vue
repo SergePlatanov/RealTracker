@@ -3,10 +3,10 @@
     import ProductCard from '@/Components/ProductCard.vue';
     import TechnosTable from '@/Pages/Service/TechnosTable.vue';
     import StatusTable from '@/Pages/Service/StatusTable.vue';
-    import { Head, Link, useForm } from '@inertiajs/vue3';
+    import { useForm } from '@inertiajs/vue3';
     import Combobox from '@/Components/Combobox.vue';
-    import { ref, computed, onMounted } from 'vue';
-    import { useState } from '@/store';
+    import { computed, onMounted } from 'vue';
+    import {useMainStore} from '@/Stores/MainStore.js';
 
     const props= defineProps({
         products: Array,
@@ -16,7 +16,7 @@
 
     const form = useForm({});
 
-    const store = useState();
+    const mainStore = useMainStore();
     
     function destroy(id) {
         if (confirm("Are you sure you want to Delete")) {
@@ -32,11 +32,11 @@
 
     const proxyProdIdx = computed({
         get() {
-            return props.products.findIndex(function isIDEquals(el) { return el.id === store.state.curProductID });
+            return props.products.findIndex(function isIDEquals(el) { return el.id === mainStore.curProductID });
         },
         set(val) {
-            if (props.products[val].id != store.state.curProductID) store.setState("CUR_TECHNO_ID", false);
-            store.setState("CUR_PRODUCT_ID", props.products[val].id);
+            if (props.products[val].id != mainStore.curProductID) mainStore.curTechnoID= false;
+            mainStore.curProductID= props.products[val].id;
         },
     });
 
@@ -48,8 +48,8 @@
 //    const getProductName = computed(() => proxyProdIdx.value === false ? "none" : (props.products[proxyProdIdx.value].title + ':' + getProductID.value));
     
     onMounted(() => {
-        if (store.state.curProductID === false) proxyProdIdx.value= 0;
-        console.log("Service onMounted curProductID:" + store.state.curProductID);
+        if (mainStore.curProductID === false) proxyProdIdx.value= 0;
+        console.log("Service onMounted curProductID:" + mainStore.curProductID);
     });
 
 </script>
@@ -137,8 +137,8 @@
                     </div>
 
                     <div class="h-fit">
-                        <h3 class="font-semibold text-lg text-gray-800 m-4 leading-tight">Статус техпроцесса - {{getTechnoTitle(store.state.curTechnoID)}}</h3>
-                        <div class="ml-8 mb-6" v-if="store.state.curTechnoID">
+                        <h3 class="font-semibold text-lg text-gray-800 m-4 leading-tight">Статус техпроцесса - {{getTechnoTitle(mainStore.curTechnoID)}}</h3>
+                        <div class="ml-8 mb-6" v-if="mainStore.curTechnoID">
                             <Link
                                 class="focus:outline-none"
                                 :href="route('status.create')"

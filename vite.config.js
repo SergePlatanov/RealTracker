@@ -28,6 +28,19 @@ export default defineConfig({
             api: 'modern-compiler' // or "modern"
             }
         }
+    },
+
+    // Solve: Some chunks are larger than 500 kB after minification
+    build: {
+        rollupOptions: {
+            output:{
+                manualChunks(id) {
+                    if (id.includes('node_modules')) {
+                        return id.toString().split('node_modules/')[1].split('/')[0].toString();
+                    }
+                }
+            }
+        }
     }
 
 });

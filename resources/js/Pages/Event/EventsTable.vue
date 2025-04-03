@@ -1,6 +1,5 @@
 <script setup>
 import { Link, useForm } from '@inertiajs/vue3';
-import { useState } from '@/store';
 import { computed } from 'vue';
 
 const props = defineProps({
@@ -12,8 +11,6 @@ const props = defineProps({
 });
 
 const form = useForm({});
-
-const store = useState();
 
 function destroy(id) {
     if(confirm("Are you sure to delete this event?")){

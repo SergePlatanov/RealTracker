@@ -23,7 +23,7 @@ const proxySelected = computed({
 </script>
 
 <template>
-        <select :value="value" v-model="proxySelected">
+        <select v-model="proxySelected">
             <option v-for="(item, key) in items" :value="key" :key="key">{{item}}</option>
         </select>
 </template>

@@ -5,9 +5,9 @@ import UpdatePasswordForm from './Partials/UpdatePasswordForm.vue';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm.vue';
 import { Head } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
-import { useState } from '@/store';
+import {useMainStore} from '@/Stores/MainStore.js';
 
-const store = useState();
+const mainStore = useMainStore();
 
 const props= defineProps({
     mustVerifyEmail: Boolean,
@@ -16,7 +16,7 @@ const props= defineProps({
 });
 
 onMounted(() => {
-    store.setState("PERMISSIONS", props.permissions);
+    mainStore.permissions= props.permissions;
 });
 
 </script>

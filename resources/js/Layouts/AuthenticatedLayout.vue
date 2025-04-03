@@ -8,9 +8,9 @@ import NavLinkAdmin from '@/Components/NavLinkAdmin.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import ResponsiveNavLinkAdmin from '@/Components/ResponsiveNavLinkAdmin.vue';
 import { Link } from '@inertiajs/vue3';
-import { useState } from '@/store';
+import {useMainStore} from '@/Stores/MainStore.js';
 
-const store = useState();
+const mainStore = useMainStore();
 
 const props= defineProps({
         enableAdmin: Boolean,
@@ -19,22 +19,10 @@ const props= defineProps({
 const showingNavigationDropdown = ref(false);
 
 onMounted(() => {
-/*    
-    if (store.state.permissions.length == 0) {
-        axios.get("/api/permissions")
-        .then((response) => {
-            console.log('permissions:' + response.data.permissions);
-            store.setState("PERMISSIONS", response.data.permissions);
-        })
-        .catch(function (resp) {
-            console.log(resp);
-        });
-    }*/
-
-    if (store.state.permissions.length == 0) {
+    if (mainStore.permissions.length == 0) {
         var permissions= JSON.parse(localStorage.getItem("PERMISSIONS")) || [];
         console.log("restore local perms: " + permissions.length);
-        if (permissions.length) store.setState("PERMISSIONS", permissions);
+        if (permissions.length) mainStore.permissions= permissions;
     }
 });
 
@@ -65,8 +53,8 @@ onMounted(() => {
                             </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink v-if="store.state.curProductID" class="ml-0" :href="route('product',store.state.curProductID)" :active="route().current('product',store.state.curProductID)">
-                                    {{store.state.curProductName}}
+                                <NavLink v-if="mainStore.curProductID" class="ml-0" :href="route('product',mainStore.curProductID)" :active="route().current('product',mainStore.curProductID)">
+                                    {{mainStore.curProductName}}
                                 </NavLink>
                             </div>
 
@@ -75,29 +63,6 @@ onMounted(() => {
                                     Настройки
                                 </NavLinkAdmin>
                             </div>
-<!--                            
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('product', store.state.curProductID)" :active="route().current('product') && store.state.curProductID !== false">
-                                    Product
-                                </NavLink>
-                            </div>
-
-                            <div v-if="store.can('edit users')" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('users.index')" :active="route().current('users.index')">
-                                    Users
-                                </NavLink>
-                            </div>
-                            <div v-if="store.can('edit users')" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('permissions.index')" :active="route().current('permissions.index')">
-                                    Permissions
-                                </NavLink>
-                            </div>
-                            <div v-if="store.can('edit users')" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink :href="route('roles.index')" :active="route().current('roles.index')">
-                                    Roles
-                                </NavLink>
-                            </div>
--->
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -181,8 +146,8 @@ onMounted(() => {
                         <ResponsiveNavLink :href="route('products')" :active="route().current('products')">
                             Продукция
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink v-if="store.state.curProductID" class="ml-0" :href="route('product',store.state.curProductID)" :active="route().current('product',store.state.curProductID)">
-                            {{store.state.curProductName}}
+                        <ResponsiveNavLink v-if="mainStore.curProductID" class="ml-0" :href="route('product',mainStore.curProductID)" :active="route().current('product',mainStore.curProductID)">
+                            {{mainStore.curProductName}}
                         </ResponsiveNavLink>
                         <ResponsiveNavLinkAdmin v-if="enableAdmin" href="/admin">
                             Настройки

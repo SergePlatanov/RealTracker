@@ -1,9 +1,9 @@
 <script setup>
 import GuestLayout from '@/Layouts/GuestLayout.vue';
-import { useState } from '@/store';
 import EditEvent from './EditEvent.vue';
+import {useMainStore} from '@/Stores/MainStore.js';
 
-const store = useState();
+const mainStore = useMainStore();
 
 const props = defineProps({
     sn: 0,
@@ -16,7 +16,7 @@ const props = defineProps({
         :IsEdit="false"
         :id="0"
         :date="null"
-        :product_id="store.state.curProductID"
+        :product_id="mainStore.curProductID"
         :sn_n= "props.sn % 10000"
         :sn_m= "Math.floor((props.sn % 10000000) / 10000)"
         :sn_p= "Math.floor(props.sn  / 10000000)"
