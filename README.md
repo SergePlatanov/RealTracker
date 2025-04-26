@@ -127,6 +127,7 @@ https://laravel.com/docs/11.x/upgrade#sanctum
 
 ## Восстанавливаем базу данных
 mysql -u fuser -p  factorydb < db.sql
+php artisan backup:restore
 
 ## Восстанавливаем public
 1. Копируем папку image
