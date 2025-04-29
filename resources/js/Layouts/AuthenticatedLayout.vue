@@ -154,8 +154,8 @@ onBeforeMount(() => {
                         <ResponsiveNavLink :href="route('products')" :active="route().current('products')">
                             Продукция
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink v-if="mainStore.curProductID" class="ml-0" :href="route('product',mainStore.curProductID)" :active="route().current('product',mainStore.curProductID)">
-                            {{mainStore.curProductName}}
+                        <ResponsiveNavLink v-for="p in mainStore.Products" class="ml-0" :href="route('product',p.id)" :active="route().current('product',p.id)" :key="p.id">
+                            {{p.title}}
                         </ResponsiveNavLink>
                         <ResponsiveNavLinkAdmin v-if="enableAdmin" href="/admin">
                             Настройки
