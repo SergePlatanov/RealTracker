@@ -40,6 +40,13 @@ class ProductController extends Controller
         }
     }
 
+    public function allProducts()
+    {
+        return response()->json([
+            'products'    => Product::where('title','<>','none')->get(),
+        ]);
+    }
+
     public function getProduct($id)
     {
         $product = Product::find($id);

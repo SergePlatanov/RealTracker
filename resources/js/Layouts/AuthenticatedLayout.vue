@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeMount } from 'vue';
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
@@ -23,6 +23,14 @@ onMounted(() => {
         var permissions= JSON.parse(localStorage.getItem("PERMISSIONS")) || [];
         console.log("restore local perms: " + permissions.length);
         if (permissions.length) mainStore.permissions= permissions;
+    }
+});
+
+onBeforeMount(() => {
+    if (mainStore.Products == null) {
+        axios.get("/api/products").then(response => {
+            mainStore.Products=  response.data.products;
+        })
     }
 });
 
@@ -52,9 +60,9 @@ onMounted(() => {
                                 </NavLink>
                             </div>
 
-                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <NavLink v-if="mainStore.curProductID" class="ml-0" :href="route('product',mainStore.curProductID)" :active="route().current('product',mainStore.curProductID)">
-                                    {{mainStore.curProductName}}
+                            <div v-for="p in mainStore.Products" class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex" :key="p.id">
+                                <NavLink class="ml-0" :href="route('product', p.id)" :active="route().current('product',p.id)">
+                                    {{p.title}}
                                 </NavLink>
                             </div>
 
