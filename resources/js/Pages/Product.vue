@@ -157,7 +157,6 @@
 
     onMounted(() => {
         mainStore.curProductID= props.product.id;
-        mainStore.curProductName= props.product.title;
         mainStore.curTechnos= props.technos;
         mainStore.curStatus= props.status;
         setTimeout(() => window.scrollTo(0, mainStore.ProductScroll), 300);
@@ -185,7 +184,7 @@
 </style>
 
 <template>
-    <Head title="Product" />
+    <Head :title="product.title" />
 
     <AuthenticatedLayout :enableAdmin="enableAdmin">
         <template #header>

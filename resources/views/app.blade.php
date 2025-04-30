@@ -10,6 +10,11 @@
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
 
+        <!-- Favicon -->
+        <link rel="icon" type="image/png" sizes="32x32" href="/chip_32.png">
+        <link rel="icon" type="image/png" sizes="64x64" href="/chip_64.png">
+        <link rel="icon" type="image/png" sizes="128x128" href="/chip_128.png">
+
         <!-- Scripts -->
         @routes
         @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
