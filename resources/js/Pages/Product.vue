@@ -33,12 +33,15 @@
                 fn: searchFN.value,
             };
         mainStore.ProductFilter= arr;
+        console.log("saveFilter id:" +props.product.id+" sn:" + mainStore.ProductFilter[props.product.id].sn);
     }
 
     function getFilter()
     {
+        console.log("getFilter:" + mainStore.ProductFilter);
         const arr= mainStore.ProductFilter;
         if (arr[props.product.id]) {
+            console.log("getFilter sn:" + arr[props.product.id].sn);
             searchText.value = arr[props.product.id].text;
             searchSN.value   = arr[props.product.id].sn;
             searchFN.value   = arr[props.product.id].fn;
@@ -46,6 +49,7 @@
             searchSNProxy.value  = searchSN.value;
             searchFNProxy.value  = searchFN.value;
         }
+        console.log("getFilter prod id:" + props.product.id);
     }
 
     var factoryNumberID= null;
@@ -160,12 +164,15 @@
         mainStore.curTechnos= props.technos;
         mainStore.curStatus= props.status;
         setTimeout(() => window.scrollTo(0, mainStore.ProductScroll), 300);
-        getFilter();
 
         var t= props.technos.find(function (el) {
             return el.title == 'установка заводского номера';
         });
         factoryNumberID= t ? t.id : null;
+    });
+
+    onBeforeMount(() => {
+        getFilter();
     });
 
     onBeforeUnmount(() => {
