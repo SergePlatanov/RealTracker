@@ -13,7 +13,7 @@
         "guzzlehttp/guzzle": "^7.2",
         "inertiajs/inertia-laravel": "^1.0",
         "laravel/breeze": "^2.0",
-        "laravel/framework": "^11.0",
+        "laravel/framework": "^11.44.1",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "shuvroroy/filament-spatie-laravel-backup": "^2.2",

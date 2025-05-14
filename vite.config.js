@@ -1,12 +1,17 @@
 import { defineConfig } from 'vite';
-import laravel from 'laravel-vite-plugin';
+import tailwindcss from '@tailwindcss/vite';
+import laravel, { refreshPaths } from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
     plugins: [
         laravel({
-            input: 'resources/js/app.js',
-            refresh: true,
+            input: ['resources/css/app.css', 'resources/js/app.js'],
+            refresh: [
+                ...refreshPaths,
+                'app/Livewire/**',
+            ],            
+
         }),
         vue({
             template: {
@@ -16,6 +21,7 @@ export default defineConfig({
                 },
             },
         }),
+        tailwindcss(),
     ],
     resolve: { // настроить предварительную компиляцию шаблонов Vue
         alias: {
@@ -25,7 +31,7 @@ export default defineConfig({
     css: {
         preprocessorOptions: {
             scss: {
-            api: 'modern-compiler' // or "modern"
+                api: 'modern-compiler' // or "modern"
             }
         }
     },
