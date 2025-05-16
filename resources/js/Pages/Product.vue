@@ -26,30 +26,29 @@
 
     function saveFilter()
     {
-        var arr= [];
-        arr[props.product.id]= {
+        var pf= {
                 text: searchText.value,
                 sn: searchSN.value,
                 fn: searchFN.value,
             };
-        mainStore.ProductFilter= arr;
+        mainStore.ProductFilter[props.product.id]= pf;
         console.log("saveFilter id:" +props.product.id+" sn:" + mainStore.ProductFilter[props.product.id].sn);
     }
 
     function getFilter()
     {
-        console.log("getFilter:" + mainStore.ProductFilter);
-        const arr= mainStore.ProductFilter;
-        if (arr[props.product.id]) {
-            console.log("getFilter sn:" + arr[props.product.id].sn);
-            searchText.value = arr[props.product.id].text;
-            searchSN.value   = arr[props.product.id].sn;
-            searchFN.value   = arr[props.product.id].fn;
+        console.log("getFilter product.id:" + props.product.id);
+        const pf= mainStore.ProductFilter[props.product.id];
+        if (pf) {
+            console.log("getFilter sn:" + pf.sn);
+            searchText.value = pf.text;
+            searchSN.value   = pf.sn;
+            searchFN.value   = pf.fn;
             searchTextProxy.value= searchText.value;
             searchSNProxy.value  = searchSN.value;
             searchFNProxy.value  = searchFN.value;
         }
-        console.log("getFilter prod id:" + props.product.id);
+        console.log("getFilter prod id:" + props.product.id + ' sn:' + searchSN.value);
     }
 
     var factoryNumberID= null;
@@ -212,7 +211,7 @@
 
             <div class="flex flex-column gap-[14px] w-full">
                 <div class="relative w-[250px]">
-                    <input class="w-full h-[30px] rounded-md pr-[20px] pl-[30px]" type="text" placeholder="Поиск по тексту ..." v-model="searchText" @input="update">
+                    <input :class="['w-full h-[30px] rounded-md pr-[20px] pl-[30px]', {'bg-green-100': searchText}]" type="text" placeholder="Поиск по тексту ..." v-model="searchText" @input="update">
                     <svg class="absolute left-[10px] top-[50%] translate-y-[-50%]" width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12.7 13.3L9.1 9.7C9.9 8.8 10.4 7.6 10.4 6.2C10.4 3.4 8.1 1.1 5.3 1.1C2.5 1.1 0.2 3.4 0.2 6.2C0.2 9 2.5 11.3 5.3 11.3C6.7 11.3 8 10.8 8.9 10L12.5 13.6C12.6 13.7 12.7 13.7 12.8 13.7C12.9 13.7 13 13.7 13.1 13.6C13.2 13.5 13.2 13.4 13.2 13.3C13.1 13.2 13.1 13.1 13 13.1C12.9 13.1 12.8 13.2 12.7 13.3ZM5.3 10.4C3 10.4 1.1 8.5 1.1 6.2C1.1 3.9 3 2 5.3 2C7.6 2 9.5 3.9 9.5 6.2C9.5 8.5 7.6 10.4 5.3 10.4Z" fill="#696958"/>
                     </svg>
@@ -223,7 +222,7 @@
                     </div>
                 </div>
                 <div class="relative w-[250px]">
-                    <input class="w-full h-[30px] rounded-md pr-[10px] pl-[30px]" type="text" placeholder="По серийному номеру ..." v-model.number="searchSN" @input="update">
+                    <input :class="['w-full h-[30px] rounded-md pr-[10px] pl-[30px]', {'bg-green-100': searchSN}]" type="text" placeholder="По серийному номеру ..." v-model.number="searchSN" @input="update">
                     <svg class="absolute left-[10px] top-[50%] translate-y-[-50%]" width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12.7 13.3L9.1 9.7C9.9 8.8 10.4 7.6 10.4 6.2C10.4 3.4 8.1 1.1 5.3 1.1C2.5 1.1 0.2 3.4 0.2 6.2C0.2 9 2.5 11.3 5.3 11.3C6.7 11.3 8 10.8 8.9 10L12.5 13.6C12.6 13.7 12.7 13.7 12.8 13.7C12.9 13.7 13 13.7 13.1 13.6C13.2 13.5 13.2 13.4 13.2 13.3C13.1 13.2 13.1 13.1 13 13.1C12.9 13.1 12.8 13.2 12.7 13.3ZM5.3 10.4C3 10.4 1.1 8.5 1.1 6.2C1.1 3.9 3 2 5.3 2C7.6 2 9.5 3.9 9.5 6.2C9.5 8.5 7.6 10.4 5.3 10.4Z" fill="#696958"/>
                     </svg>
@@ -234,7 +233,7 @@
                     </div>
                 </div>
                 <div class="relative w-[250px]">
-                    <input class="w-full h-[30px] rounded-md pr-[10px] pl-[30px]" type="text" placeholder="По заводскому номеру ..." v-model="searchFN" @input="update">
+                    <input :class="['w-full h-[30px] rounded-md pr-[10px] pl-[30px]', {'bg-green-100': searchFN}]" type="text" placeholder="По заводскому номеру ..." v-model="searchFN" @input="update">
                     <svg class="absolute left-[10px] top-[50%] translate-y-[-50%]" width="13" height="14" viewBox="0 0 13 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12.7 13.3L9.1 9.7C9.9 8.8 10.4 7.6 10.4 6.2C10.4 3.4 8.1 1.1 5.3 1.1C2.5 1.1 0.2 3.4 0.2 6.2C0.2 9 2.5 11.3 5.3 11.3C6.7 11.3 8 10.8 8.9 10L12.5 13.6C12.6 13.7 12.7 13.7 12.8 13.7C12.9 13.7 13 13.7 13.1 13.6C13.2 13.5 13.2 13.4 13.2 13.3C13.1 13.2 13.1 13.1 13 13.1C12.9 13.1 12.8 13.2 12.7 13.3ZM5.3 10.4C3 10.4 1.1 8.5 1.1 6.2C1.1 3.9 3 2 5.3 2C7.6 2 9.5 3.9 9.5 6.2C9.5 8.5 7.6 10.4 5.3 10.4Z" fill="#696958"/>
                     </svg>
@@ -244,70 +243,7 @@
                         </svg>
                     </div>
                 </div>
-
-<!---
-                <span>{{ status }}</span>
--->                                
             </div>
-
-<!---
-            <div class="flex max-w-7xl mx-auto my-4 sm:px-6 lg:px-8">
-                <div @click="onViewFilter()" class="cursor-pointer">
-                    <div v-if="viewFilter">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6" :class="{'fill-green-600': isFiltered}">
-                        <path fill-rule="evenodd" d="M12.53 16.28a.75.75 0 01-1.06 0l-7.5-7.5a.75.75 0 011.06-1.06L12 14.69l6.97-6.97a.75.75 0 111.06 1.06l-7.5 7.5z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                    <div v-else>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6" :class="{'fill-green-600': isFiltered}">
-                        <path fill-rule="evenodd" d="M11.47 7.72a.75.75 0 011.06 0l7.5 7.5a.75.75 0 11-1.06 1.06L12 9.31l-6.97 6.97a.75.75 0 01-1.06-1.06l7.5-7.5z" clip-rule="evenodd" />
-                        </svg>
-                    </div>
-                </div>
-                <h3 class="font-semibold text-lg ml-4 text-gray-800 leading-tight" :class="{'text-green-600': isFiltered}">Фильтр</h3>
-                <div class= "flex px-4 max-w-7xl ml-8 sm:px-6 lg:px-8" :class="{'text-green-700': isFiltered}">
-                    <div class= "flex px-4" v-if="search.sn">{{'сн:' + search.sn}}</div>
-                    <div class= "flex px-4" v-if="search.fn">{{'зн:' + search.fn}}</div>
-                    <div class= "flex px-4" v-if="search.text">{{'текс:' + search.text}}</div>
-                    <svg v-if="isFiltered" clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="w-6 h-6 cursor-pointer" :class="{'fill-green-600': isFiltered}" @click="onSearchReset()">
-                        <path d="m12 10.93 5.719-5.72c.146-.146.339-.219.531-.219.404 0 .75.324.75.749 0 .193-.073.385-.219.532l-5.72 5.719 5.719 5.719c.147.147.22.339.22.531 0 .427-.349.75-.75.75-.192 0-.385-.073-.531-.219l-5.719-5.719-5.719 5.719c-.146.146-.339.219-.531.219-.401 0-.75-.323-.75-.75 0-.192.073-.384.22-.531l5.719-5.719-5.72-5.719c-.146-.147-.219-.339-.219-.532 0-.425.346-.749.75-.749.192 0 .385.073.531.219z"/>
-                    </svg>
-                </div>
-            </div>
-            <div v-if="viewFilter" class= "p-4 max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="flex items-center w-full">
-                    <InputLabel for="text" class="mr-2" value="Поиск по тексту" />
-                    <TextInput id="text" v-model="search.text" @keyup.enter="onSearch()" class="mt-1 border-2 mb-2 basis-1/4 w-full"/>
-                </div>
-                <div class="flex">
-                    <div class="flex items-center mr-4">
-                        <InputLabel for="sn" class="mr-2" value="Поиск по серийному номеру" />
-                        <TextInput id="sn" v-model="search.sn" @keyup.enter="onSearch()" class="mt-1 mb-2 border-2 basis-1/4 w-full"/>
-                    </div>
-                    <div class="flex items-center">
-                        <InputLabel for="fn" class="mr-2" value="Поиск по заводскому номеру" />
-                        <TextInput id="fn" v-model="search.fn" @keyup.enter="onSearch()" class="mt-1 mb-2 border-2 basis-1/4 w-full"/>
-                    </div>
-                </div>
-                <div class="flex">
-                    <button
-                        type="button"
-                        class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
-                        @click="onSearch()"
-                    >
-                        Поиск
-                    </button>
-                    <button
-                        type="button"
-                        class="inline-flex items-center px-4 py-2 ml-4 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
-                        @click="onSearchReset()"
-                    >
-                        Сброс
-                    </button>
-                </div>
-            </div>
--->        
-
         </div>
 
         <div class="max-w-7xl bg-white py-12 pb-12 mx-auto sm:px-6 lg:px-8 sm:rounded-lg">
