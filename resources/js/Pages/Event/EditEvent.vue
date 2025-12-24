@@ -10,9 +10,10 @@ import TextInput from '@/Components/TextInput.vue';
 import { computed, ref } from 'vue';
 import { Head, Link, useForm, router } from '@inertiajs/vue3';
 //import { Inertia } from "@inertiajs/inertia";
-import Datepicker from '@vuepic/vue-datepicker';
+import { VueDatePicker } from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css'
 //import { ru } from 'date-fns/locale';
-import '@vuepic/vue-datepicker/dist/main.css';
+//import '@vuepic/vue-datepicker/dist/main.css';
 import {useMainStore} from '@/Stores/MainStore.js';
 
 const mainStore = useMainStore();
@@ -173,7 +174,7 @@ const submit = () => {
                         <div class="flex flex-col">
                             <div>
                                 <InputLabel for="date" value="Дата" />
-                                <Datepicker
+                                <VueDatePicker
                                     id="date"
                                     v-model="date"
                                     :format="format"

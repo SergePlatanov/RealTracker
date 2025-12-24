@@ -2,11 +2,23 @@
 
 namespace App\Filament\Resources;
 
+use Filament\Schemas\Schema;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Actions\ViewAction;
+use Filament\Actions\EditAction;
+use Filament\Actions\DeleteAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+use App\Filament\Resources\UserResource\Pages\ListUsers;
+use App\Filament\Resources\UserResource\Pages\CreateUser;
+use App\Filament\Resources\UserResource\Pages\EditUser;
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
-use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -19,14 +31,14 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-users';
+    protected static string | \BackedEnum | null $navigationIcon = 'heroicon-o-users';
     protected static ?int $navigationSort     = 200;
 
     protected static ?string $modelLabel = 'Пользователь';
     protected static ?string $pluralModelLabel = 'Пользователи';
     protected static ?string $navigationLabel = 'Пользователи';
 
-    protected static ?string $navigationGroup = 'Аутентификация';
+    protected static string | \UnitEnum | null $navigationGroup = 'Аутентификация';
 
     protected static ?string $name      = 'ФИО';
     protected static ?string $email     = 'Адрес ел. почты';
@@ -39,28 +51,28 @@ class UserResource extends Resource
 //        return auth()->user()->can('управлять пользователями');
 //    }    
 
-    public static function form(Form $form): Form
+    public static function form(Schema $schema): Schema
     {
-        return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
+        return $schema
+            ->components([
+                TextInput::make('name')
                     ->required()
                     ->label(__(static::$name)),
-                Forms\Components\TextInput::make('email')
+                TextInput::make('email')
                     ->email()
                     ->required()
                     ->label(__(static::$email)),
-                Forms\Components\TextInput::make('password')
+                TextInput::make('password')
                     ->label(static::$password)
                     ->password()
                     ->maxLength(255)
-                    ->dehydrateStateUsing(static function ($state, $record) use ($form) {
+                    ->dehydrateStateUsing(static function ($state, $record) use ($schema) {
                             return !empty($state)
                                 ? Hash::make($state)
                                 : $record->password;
                         }),
 
-                Forms\Components\Select::make('roles')
+                Select::make('roles')
                     ->relationship(name: 'roles', titleAttribute: 'name')
 //                    ->saveRelationshipsUsing(function (Model $record, $state) {
 //                            $record->roles()->syncWithPivotValues($state, [config('permission.column_names.team_foreign_key') => getPermissionsTeamId()]);
@@ -74,32 +86,32 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
                     ->label(__(static::$name))                
                     ->sortable()
                     ->searchable(),
-                Tables\Columns\TextColumn::make('email')
+                TextColumn::make('email')
                     ->label(__(static::$email)),
-                Tables\Columns\IconColumn::make('email_verified_at')
+                IconColumn::make('email_verified_at')
                     ->boolean()
                     ->sortable()
                     ->searchable()
                     ->label(__(static::$email_verified_at)),
-                Tables\Columns\TextColumn::make('roles.name')
+                TextColumn::make('roles.name')
                     ->label(__(static::$roles))  
                     ->sortable(),
             ])
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make()->iconButton()->tooltip(trans('filament-users::user.resource.title.show')),
-                Tables\Actions\EditAction::make()->iconButton()->tooltip(trans('filament-users::user.resource.title.edit')),
-                Tables\Actions\DeleteAction::make()->iconButton()->tooltip(trans('filament-users::user.resource.title.delete'))
+            ->recordActions([
+                ViewAction::make()->iconButton()->tooltip(trans('filament-users::user.resource.title.show')),
+                EditAction::make()->iconButton()->tooltip(trans('filament-users::user.resource.title.edit')),
+                DeleteAction::make()->iconButton()->tooltip(trans('filament-users::user.resource.title.delete'))
             ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+            ->toolbarActions([
+                BulkActionGroup::make([
+                    DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -114,9 +126,9 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            'index' => ListUsers::route('/'),
+            'create' => CreateUser::route('/create'),
+            'edit' => EditUser::route('/{record}/edit'),
         ];
     }
 }

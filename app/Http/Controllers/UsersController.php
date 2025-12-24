@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
@@ -18,8 +19,8 @@ class UsersController extends Controller
 {
     /**
      * Display all users
-     * 
-     * @return \Illuminate\Http\Response
+     *
+     * @return Response
      */
     public function index() 
     {
@@ -36,8 +37,8 @@ class UsersController extends Controller
 
     /**
      * Show form for creating user
-     * 
-     * @return \Illuminate\Http\Response
+     *
+     * @return Response
      */
     public function create() 
     {
@@ -47,11 +48,11 @@ class UsersController extends Controller
 
     /**
      * Store a newly created user
-     * 
+     *
      * @param User $user
      * @param StoreUserRequest $request
-     * 
-     * @return \Illuminate\Http\Response
+     *
+     * @return Response
      */
     public function store(User $user, StoreUserRequest $request) 
     {
@@ -76,10 +77,10 @@ class UsersController extends Controller
 
     /**
      * Edit user data
-     * 
+     *
      * @param User $user
-     * 
-     * @return \Illuminate\Http\Response
+     *
+     * @return Response
      */
     public function edit(User $user) 
     {
@@ -92,11 +93,11 @@ class UsersController extends Controller
 
     /**
      * Update user data
-     * 
+     *
      * @param User $user
      * @param UpdateUserRequest $request
-     * 
-     * @return \Illuminate\Http\Response
+     *
+     * @return Response
      */
     public function update(User $user, UpdateUserRequest $request) 
     {
@@ -110,10 +111,10 @@ class UsersController extends Controller
 
     /**
      * Delete user data
-     * 
+     *
      * @param User $user
-     * 
-     * @return \Illuminate\Http\Response
+     *
+     * @return Response
      */
     public function destroy(User $user) 
     {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Spatie\Permission\Models\Permission;
@@ -12,7 +13,7 @@ class PermissionsController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {   
@@ -24,8 +25,8 @@ class PermissionsController extends Controller
 
     /**
      * Show form for creating permissions
-     * 
-     * @return \Illuminate\Http\Response
+     *
+     * @return Response
      */
     public function create() 
     {   
@@ -35,8 +36,8 @@ class PermissionsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store(Request $request)
     {   
@@ -53,7 +54,7 @@ class PermissionsController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  Permission  $post
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(Permission $permission)
     {
@@ -65,9 +66,9 @@ class PermissionsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  Permission  $permission
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Permission $permission)
     {
@@ -85,7 +86,7 @@ class PermissionsController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Permission $permission)
     {

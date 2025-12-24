@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
@@ -21,10 +22,10 @@ class ProductController extends Controller
     }
 
    /**
-    * Display a listing of the resource.
-    *
-    * @return \Illuminate\Http\Response
-    */
+     * Display a listing of the resource.
+     *
+     * @return Response
+     */
     public function index()
     {
         $user= Auth::user();
@@ -74,21 +75,21 @@ class ProductController extends Controller
     }
 
     /**
-    * Show the form for creating a new resource.
-    *
-    * @return \Illuminate\Http\Response
-    */
+     * Show the form for creating a new resource.
+     *
+     * @return Response
+     */
     public function create()
     {
         return Inertia::render('Product/Create');
     }
 
     /**
-    * Store a newly created resource in storage.
-    *
-    * @param  \Illuminate\Http\Request  $request
-    * @return \Illuminate\Http\Response
-    */
+     * Store a newly created resource in storage.
+     *
+     * @param Request $request
+     * @return Response
+     */
     public function store(Request $request)
     {
         Log::debug('ProductController::store');
@@ -116,11 +117,11 @@ class ProductController extends Controller
     }
 
     /**
-    * Show the form for editing the specified resource.
-    *
-    * @param  \App\Product  $product
-    * @return \Illuminate\Http\Response
-    */
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Product  $product
+     * @return Response
+     */
     public function edit($id)
     {
         $product= Product::find($id);
@@ -131,12 +132,12 @@ class ProductController extends Controller
     }
 
     /**
-    * Update the specified resource in storage.
-    *
-    * @param  \Illuminate\Http\Request  $request
-    * @param  \App\Product  $product
-    * @return \Illuminate\Http\Response
-    */
+     * Update the specified resource in storage.
+     *
+     * @param Request $request
+     * @param  \App\Product  $product
+     * @return Response
+     */
     public function update(Request $request, $id)
     {
         Log::debug('ProductController::update - ' . $id);
@@ -175,11 +176,11 @@ class ProductController extends Controller
     }
 
     /**
-    * Remove the specified resource from storage.
-    *
-    * @param  \App\Product  $product
-    * @return \Illuminate\Http\Response
-    */
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Product  $product
+     * @return Response
+     */
     public function destroy($id)
     {
         Product::find($id)->delete();
