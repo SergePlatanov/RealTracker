@@ -32,19 +32,19 @@ const props = defineProps({
     active: Boolean,
     file: Object,
 });
-
-const date = ref(props.IsEdit ? props.date : new Date());
-const format = (date) => {
-    console.log("format:"+date);
-    form.date= date.toISOString().split("T")[0];
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-    return (day > 9 ? day : "0"+day)+"-"+(month > 9 ? month : "0"+month)+"-"+year;
+const format = (d) => {
+    console.log("format:"+d);
+//    form.date= d.toISOString().split("T")[0];
+    const day = d.getDate();
+    const month = d.getMonth() + 1;
+    const year = d.getFullYear();
+    return year+"-"+(month > 9 ? month : "0"+month)+"-"+(day > 9 ? day : "0"+day);
 }
 
+const date = ref(props.IsEdit ? props.date : format(new Date()));
+
 const form = useForm({
-    date: props.date,
+    date: date,
     product_id: props.product_id,
     sn_n: props.sn_n,
     sn_m: props.sn_m,
@@ -173,14 +173,21 @@ const submit = () => {
                     <form @submit.prevent="submit">
                         <div class="flex flex-col">
                             <div>
-                                <InputLabel for="date" value="Дата" />
+                                <InputLabel value="Дата" />
                                 <VueDatePicker
-                                    id="date"
-                                    v-model="date"
-                                    :format="format"
+                                    v-model="form.date"
+                                    model-type="yyyy-MM-dd"
+                                    :formats="{ input: 'yyyy-MM-dd', preview: 'yyyy-MM-dd' }"
+                                    :time-config="{ enableTimePicker: false }"
+                                    text-input
+                                />
+<!--
+                                    :locale="ru_RU"
+                                    :text-input="{ maskFormat: 'yyyy-MM-dd' }"
                                     required
                                     autofocus
-                                />
+
+-->                                
                                 <InputError class="mt-2" :message="form.errors.date" />
                             </div>
 

@@ -70,16 +70,15 @@
 
     function getFNumber(sn) {
         var fn= 's/n:'+sn;
-        for (var key in props.tables) {
-            if (props.tables[key][0].sn_n == sn) {
-                props.tables[key].forEach((el) => {
+        for (var key in searchTable.value) {
+            if (searchTable.value[key][0].sn_n == sn) {
+                searchTable.value[key].forEach((el) => {
                     if (el.techno_id == factoryNumberID && el.description) fn= el.description;
                 })
             }
         }
         return fn;
     }
-
     function getLastSN(events) {
         const el= events[events.length-1];
         return el.sn_p * 10000000 + el.sn_m * 10000 + el.sn_n
@@ -163,15 +162,14 @@
         mainStore.curTechnos= props.technos;
         mainStore.curStatus= props.status;
         setTimeout(() => window.scrollTo(0, mainStore.ProductScroll), 300);
-
-        var t= props.technos.find(function (el) {
-            return el.title == 'установка заводского номера';
-        });
-        factoryNumberID= t ? t.id : null;
     });
 
     onBeforeMount(() => {
         getFilter();
+        var t= props.technos.find(function (el) {
+            return el.title == 'установка заводского номера';
+        });
+        factoryNumberID= t ? t.id : null;
     });
 
     onBeforeUnmount(() => {
