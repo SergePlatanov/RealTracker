@@ -7,7 +7,7 @@ import SecondaryButton from '@/Components/SecondaryButton.vue';
 import Combobox from '@/Components/Combobox.vue';
 import TextArea from '@/Components/TextArea.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { computed, ref } from 'vue';
+import { computed, ref, onBeforeMount } from 'vue';
 import { Head, Link, useForm, router } from '@inertiajs/vue3';
 //import { Inertia } from "@inertiajs/inertia";
 import { VueDatePicker } from '@vuepic/vue-datepicker';
@@ -21,16 +21,8 @@ const mainStore = useMainStore();
 const props = defineProps({
     IsEdit: Boolean,
     id: Number,
-    date: String,
-    product_id: Number,
-    sn_n: Number,
-    sn_m: Number,
-    sn_p: Number,
-    description: String,
-    techno_id: Number,
-    status_id: Number,
-    active: Boolean,
-    file: Object,
+    form: Object,
+    errors: Object,
 });
 const format = (d) => {
     console.log("format:"+d);
@@ -41,20 +33,7 @@ const format = (d) => {
     return year+"-"+(month > 9 ? month : "0"+month)+"-"+(day > 9 ? day : "0"+day);
 }
 
-const date = ref(props.IsEdit ? props.date : format(new Date()));
-
-const form = useForm({
-    date: date,
-    product_id: props.product_id,
-    sn_n: props.sn_n,
-    sn_m: props.sn_m,
-    sn_p: props.sn_p,
-    description: props.description,
-    techno_id: props.techno_id,
-    status_id: props.status_id,
-    active: props.active,
-    file: null,
-});
+//const date = ref(props.IsEdit ? props.form.date : format(new Date()));
 
 function getTechnoNames() {
     const arr= [];
@@ -66,7 +45,7 @@ const proxyTechnoID = computed({
     get() {
         var Index= false;
         var t= mainStore.curTechnos?.find((el, key) =>  {
-            if (el.id === form.techno_id)  {
+            if (el.id === props.form.techno_id)  {
                 Index= key;
                 return true;
             } else {
@@ -76,13 +55,13 @@ const proxyTechnoID = computed({
         return Index;
     },
     set(val) {
-        form.techno_id= mainStore.curTechnos[val].id;
+        props.form.techno_id= mainStore.curTechnos[val].id;
     },
 });
 
 function getCurStatus()
 {
-    return mainStore.curStatus?.filter(el => (el.techno_id == form.techno_id && el.deleted_at == null));
+    return mainStore.curStatus?.filter(el => (el.techno_id == props.form.techno_id && el.deleted_at == null));
 }
 
 function getStatusNames() {
@@ -97,7 +76,7 @@ const proxyStatusID = computed({
         const sts= getCurStatus();
         var Index= false;
         var t= sts?.find((el, key) =>  {
-            if (el.id === form.status_id)  {
+            if (el.id === props.form.status_id)  {
                 Index= key;
                 return true;
             } else {
@@ -108,7 +87,7 @@ const proxyStatusID = computed({
     },
     set(val) {
         const sts= getCurStatus();
-        form.status_id= sts[val].id;
+        props.form.status_id= sts[val].id;
     },
 });
 
@@ -136,30 +115,34 @@ const proxyFile = computed({
 });
 */
 const submit = () => {
-    if (form.description === null) form.description= '';
+    if (props.form.description === null) props.form.description= '';
     if (props.IsEdit) {
         router.post(route('events.update', props.id), {
             _method: 'put',
-            date: form.date,
-            product_id: form.product_id,
-            sn_n: form.sn_n,
-            sn_m: form.sn_m,
-            sn_p: form.sn_p,
-            description: form.description,
-            techno_id: form.techno_id,
-            status_id: form.status_id,
-            active: form.active,
-            file: newfile,
+            date:           props.form.date,
+            product_id:     props.form.product_id,
+            sn_n:           props.form.sn_n,
+            sn_m:           props.form.sn_m,
+            sn_p:           props.form.sn_p,
+            description:    props.form.description,
+            techno_id:      props.form.techno_id,
+            status_id:      props.form.status_id,
+            active:         props.form.active,
+            file:           newfile,
         });
     } else {
-        form.file= newfile;
-        form.post(route('events.store'), {
+        props.form.file= newfile;
+        props.form.post(route('events.store'), {
 //            onFinish: () => form.reset('description'),
 //            preserveScroll: (page) => Object.keys(page.props.errors).length,
 //            preserveScroll: true,
         });
     }
 };
+
+onBeforeMount(() => {
+    if (!props.IsEdit) props.form.date= format(new Date());
+});
 
 </script>
 
@@ -188,38 +171,44 @@ const submit = () => {
                                     autofocus
 
 -->                                
-                                <InputError class="mt-2" :message="form.errors.date" />
+                                <InputError class="mt-2" :message="errors.date" />
                             </div>
 
                             <div class="mt-4">
                                 <InputLabel for="sn_p"  value="Серийный номер" />
-                                <div class="flex flex-row">
-                                    <TextInput
-                                        id="sn_p"
-                                        type="text"
-                                        class="mt-1 basis-1/4 w-full"
-                                        v-model="form.sn_p"
-                                        autocomplete="sn_p"
-                                    />
-                                    <TextInput
-                                        id="sn_m"
-                                        type="text"
-                                        class="mt-1 basis-1/4 w-full"
-                                        v-model="form.sn_m"
-                                        autocomplete="sn_m"
-                                    />
-                                    <TextInput
-                                        id="sn_n"
-                                        type="text"
-                                        class="mt-1 basis-1/2 w-full"
-                                        v-model="form.sn_n"
-                                        required
-                                        autocomplete="sn_n"
-                                    />
+                                <div class="flex flex-column">
+                                    <div class="flex flex-column w-full basis-1/4">
+                                        <TextInput
+                                            id="sn_p"
+                                            type="text"
+                                            class="mt-1 w-full"
+                                            v-model="form.sn_p"
+                                            autocomplete="sn_p"
+                                        />
+                                        <InputError class="mt-2" :message="errors.sn_p" />
+                                    </div>
+                                    <div class="flex flex-column w-full basis-1/4">
+                                        <TextInput
+                                            id="sn_m"
+                                            type="text"
+                                            class="mt-1 w-full"
+                                            v-model="form.sn_m"
+                                            autocomplete="sn_m"
+                                        />
+                                        <InputError class="mt-2" :message="errors.sn_m" />
+                                    </div>
+                                    <div class="flex flex-column w-full basis-1/4">
+                                        <TextInput
+                                            id="sn_n"
+                                            type="text"
+                                            class="mt-1 w-full"
+                                            v-model="form.sn_n"
+                                            required
+                                            autocomplete="sn_n"
+                                        />
+                                        <InputError class="mt-2" :message="errors.sn_n" />
+                                    </div>
                                 </div>
-                                <InputError class="mt-2" :message="form.errors.sn_p" />
-                                <InputError class="mt-2" :message="form.errors.sn_m" />
-                                <InputError class="mt-2" :message="form.errors.sn_n" />
                             </div>
 
                             <div class="mt-4">
@@ -232,7 +221,7 @@ const submit = () => {
                                     autocomplete="description"
                                     rows="3"
                                 />
-                                <InputError class="mt-2" :message="form.errors.description" />
+                                <InputError class="mt-2" :message="errors.description" />
                             </div>
 
                             <div class="mt-4">
@@ -245,8 +234,7 @@ const submit = () => {
                                     required
                                     autocomplete="techno_id"
                                 />
-
-                                <InputError class="mt-2" :message="form.errors.techno_id" />
+                                <InputError class="mt-2" :message="errors.techno_id" />
                             </div>
 
                             <div class="mt-4">
@@ -259,17 +247,17 @@ const submit = () => {
                                     autocomplete="status_id"
                                 />
 
-                                <InputError class="mt-2" :message="form.errors.status_id" />
+                                <InputError class="mt-2" :message="errors.status_id" />
                             </div>
 
                             <div class="mt-4">
-                                <label v-if="props.IsEdit && props.file">old file: {{props.file}}</label>
+                                <label v-if="props.IsEdit && props.form.file">old file: {{props.form.file}}</label>
                                 <input type="file" @input="FileInput($event)" />
                                 <progress v-if="form.progress" :value="form.progress.percentage" max="100">
                                     {{ form.progress.percentage }}%
                                 </progress>
 
-                                <InputError class="mt-2" :message="form.errors.file" />
+                                <InputError class="mt-2" :message="errors.file" />
                             </div>
 
 

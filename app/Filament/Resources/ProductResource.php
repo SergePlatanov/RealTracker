@@ -45,6 +45,7 @@ class ProductResource extends Resource
     protected static ?string $path        = 'Фото';
     protected static ?string $title       = 'Название';
     protected static ?string $description = 'Описание';
+    protected static ?string $statistic   = 'Тип статистики';
 //    protected static ?string $       = '';
 
 
@@ -63,12 +64,19 @@ class ProductResource extends Resource
                     ->columnSpanFull(),
 
                 Textarea::make('title')
-                    ->label('Название')
+                    ->label(__(static::$title))
                     ->columnSpanFull(),
     
                 Textarea::make('description')
-                    ->label('Описание')
+                    ->label(__(static::$description))
                     ->columnSpanFull(),
+
+                Select::make('statistic')
+                    ->label(__(static::$statistic))
+                    ->options([
+                        'production'  => 'Производство',
+                        'repair'      => 'Ремонт',
+                    ]),
 
                 Repeater::make('techno')
                     ->label('Конструктор техпроцесса')
@@ -111,6 +119,9 @@ class ProductResource extends Resource
                     ->searchable(),
                 TextColumn::make('description')
                     ->label(__(static::$description))
+                    ->searchable(),
+                TextColumn::make('statistic')
+                    ->label(__(static::$statistic))
                     ->searchable(),
             ])
             ->filters([

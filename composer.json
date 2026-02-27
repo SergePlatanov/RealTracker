@@ -6,7 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "achyutn/filament-log-viewer": "^1.6",
+        "achyutn/filament-log-viewer": "^1.7",
         "althinect/filament-spatie-roles-permissions": "3.x-dev",
         "filament/filament": "^4.0",
         "guzzlehttp/guzzle": "^7.2",

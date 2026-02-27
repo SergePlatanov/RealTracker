@@ -39,15 +39,15 @@ if (!function_exists('saveTechProcess')) {
             array_push($techno_ids, $techno->id);
         }
 
-        Log::debug($status_ids);
+//        Log::debug($status_ids);
 
         // delete extra status
         foreach (Techno::where('product_id',$product_id)->get() as $t) {
             foreach (Status::where('techno_id',$t->id)->get() as $s) {
-                Log::debug('Status model ids:' . $s->id);
+//                Log::debug('Status model ids:' . $s->id);
                 if (!in_array($s->id, $status_ids)) {
                     $s->delete();
-                    Log::debug('Delete Status id:' . $s->id);
+//                    Log::debug('Delete Status id:' . $s->id);
                 }
             }
         }

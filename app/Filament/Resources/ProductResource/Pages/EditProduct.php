@@ -23,6 +23,9 @@ class EditProduct extends EditRecord
     {
         $builder= array();
 
+        Log::debug("mutateFormDataBeforeFill");
+        Log::debug($data);
+
         foreach(Techno::where('product_id',$data['id'])->get()->sortBy('order') as $t)
         {
             $techno= array( 'id'         => $t->id,
@@ -47,8 +50,18 @@ class EditProduct extends EditRecord
         return $data;
     }
 
+    protected function mutateFormDataBeforeSave(array $data): array
+    {
+        Log::debug("mutateFormDataBeforeSave");
+        Log::debug($data);
+        return $data;
+    }
+
     protected function handleRecordUpdate(Model $record, array $data): Model
     {
+        Log::debug("handleRecordUpdate");
+        Log::debug($data);
+
         $record->update($data);
 
         saveTechProcess($data['techno'], $record->id);

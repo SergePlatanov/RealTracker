@@ -21,13 +21,13 @@ class EventController extends Controller
     public function create()
     {
         $sn= intval(parse_url(url()->full(), PHP_URL_QUERY));
-        Log::debug("Event::create sn=".$sn);
+//        Log::debug("Event::create sn=".$sn);
         return Inertia::render('Event/Create', ['sn' => $sn]);
     }
 
     public function edit($id)
     {
-        Log::debug("Event::edit - " . $id);
+//        Log::debug("Event::edit - " . $id);
         $event= Event::find($id);
         return Inertia::render('Event/Edit', [
             'event' => $event
@@ -49,12 +49,14 @@ class EventController extends Controller
             'techno_id'     => 'required|numeric|min:0',
             'status_id'     => 'required|numeric|min:0',
         ]);
+        Log::debug("validate 1");
 
         if ($request->hasFile('file')) {
             $request->validate([
                 'file'        => 'file|mimes:txt,txr,rep|max:2048',
             ]);
         }
+        Log::debug("validate 2");
         $evt= Event::find($id);
         $evt->date= $request->input('date');
         $evt->sn_n= $request->input('sn_n');
@@ -64,16 +66,21 @@ class EventController extends Controller
         $evt->techno_id= $request->input('techno_id');
         $evt->status_id= $request->input('status_id');
         $evt->update();
+        Log::debug("Event update");
+        Log::debug($evt);
 
 
         // https://laravel.com/docs/9.x/filesystem
         if ($request->hasFile('file')) {
+            Log::debug("hasFile ".count($evt->files));
             if (count($evt->files)) {
                 $destination = 'storage/'.$evt->files[0]->path;
                 if(Storage::exists($destination))
                 {
+                    Log::debug("Storage::delete ");
                     Storage::delete($destination);
                 }
+                Log::debug("File::find");
                 File::find($evt->files[0]->id)->delete();
             }
 
@@ -84,13 +91,13 @@ class EventController extends Controller
                             "event_id" => $evt->id,
                         ]);
         }
-
+        Log::debug("redirect - product" . $evt->product_id);
         return redirect()->route('product', $evt->product_id)->with('success','Event has been updated successfully');
     }
 
     public function destroy($id)
     {
-        Log::debug("Event::destroy - " . $id);
+//        Log::debug("Event::destroy - " . $id);
         $evt= Event::find($id);
         $evt->active= false;
         $evt->save();
@@ -104,7 +111,7 @@ class EventController extends Controller
 
     public function store(Request $request)
     {
-        Log::debug("Event::store");
+//        Log::debug("Event::store");
 
         $id= $request->post()["product_id"];
 
@@ -137,7 +144,7 @@ class EventController extends Controller
                             "path" => $filePath,
                             "event_id" => $evt->id,
                         ]);
-            Log::debug("Create file: " . $filePath);
+//            Log::debug("Create file: " . $filePath);
         }
 
         return to_route('product', $id)->with('success','Event has been created successfully.');

@@ -3,6 +3,7 @@
     import { Head, Link, useForm, router } from '@inertiajs/vue3';
     import EventsTable from '@/Pages/Event/EventsTable.vue';
     import ProductCard from '@/Components/ProductCard.vue';
+    import Statistic from '@/Components/Statistic.vue';
     import { ref, computed, onBeforeMount, onMounted, onBeforeUnmount, onUnmounted, nextTick } from 'vue';
     import {useMainStore} from '@/Stores/MainStore.js';
 
@@ -23,6 +24,14 @@
     const searchSNProxy= ref('');
     const searchFN= ref('');
     const searchFNProxy= ref('');
+
+    const statistic= ref({
+            title: '',
+            labels: [],
+            data: [],
+            backgroundColor: [],
+            borderColor: []
+        });
 
     function saveFilter()
     {
@@ -157,6 +166,82 @@
         return objtx;
     })
 
+    function CalcStatistic() {
+        let restore= 0;
+        let bad= 0;
+        let sts_fail= [];
+        let sts_ok  = [];
+        const TablesKeys = Object.keys(props.tables);
+        const N= TablesKeys.length;
+
+        let fail= props.status.filter(el => el.level === 'failure');
+        if (fail) {
+            console.log(fail);
+            fail.forEach((s) => {
+                sts_fail.push(s.id);
+            });
+        }
+        let ok= props.status.filter(el => el.level === 'ok');
+        if (ok) {
+            console.log(ok);
+            ok.forEach((s) => {
+                sts_ok.push(s.id);
+            });
+        }
+        Object.keys(props.tables).forEach(key => {
+            let count= 0;
+            let remont = false;
+            for (let event of props.tables[key]) {
+                if (sts_fail.includes(event.status_id)) {
+                    count++;
+                    remont= true;
+                } else {
+                    if (remont && sts_ok.includes(event.status_id)) {
+                        remont= false;
+                    }
+                }
+            }
+            if (count) {
+                if (remont) 
+                    bad++;
+                else
+                    restore++;
+            }
+        });
+        statistic.value.title = props.product.title;
+        if (props.product.statistic == "production") {
+            statistic.value.labels= ['всего ', 'были в ремонте ', 'брак '];
+            statistic.value.data  = [ N,        restore,           bad];
+            statistic.value.backgroundColor= [
+                        'rgba(75, 192, 89, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(255, 99, 132, 0.2)',
+    //                    'rgba(153, 102, 255, 0.2)',
+    //                    'rgba(201, 203, 207, 0.2)'
+                    ];
+            statistic.value.borderColor= [
+                        'rgb(75, 192, 89)',
+                        'rgb(255, 159, 64)',
+                        'rgb(255, 99, 132)',
+    //                    'rgb(153, 102, 255)',
+    //                    'rgb(201, 203, 207)'
+                    ];
+        }
+        if (props.product.statistic == "repair") {
+            statistic.value.labels= ['всего ', 'отремонтированы'];
+            statistic.value.data  = [ N,        N-bad];
+            statistic.value.backgroundColor= [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(75, 192, 89, 0.2)',
+                    ];
+            statistic.value.borderColor= [
+                        'rgb(255, 99, 132)',
+                        'rgb(75, 192, 89)',
+                    ];
+        }
+
+    }
+
     onMounted(() => {
         mainStore.curProductID= props.product.id;
         mainStore.curTechnos= props.technos;
@@ -170,6 +255,7 @@
             return el.title == 'установка заводского номера';
         });
         factoryNumberID= t ? t.id : null;
+        CalcStatistic();
     });
 
     onBeforeUnmount(() => {
@@ -192,14 +278,15 @@
 
     <AuthenticatedLayout :enableAdmin="enableAdmin">
         <template #header>
-            <div class="flex justify-between font-semibold text-xl text-gray-800 leading-tight">
+            <div class="flex justify-between max-h-[100px] font-semibold text-xl text-gray-800 leading-tight">
                 <ProductCard :name="product.title" :description="product.description" :img="'/storage/'+product.path" />
+                <Statistic v-if="props.product.statistic" class="grow pl-[30px]" :dataset="statistic"/>
                 <Link v-if="enableEdit"
                     class="px-3 py-2 mr-2 focus:outline-none"
                     :href="route('events.create')"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
-                    <path fill-rule="evenodd" d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z" clip-rule="evenodd" />
+                        <path fill-rule="evenodd" d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z" clip-rule="evenodd" />
                     </svg>
                 </Link>
             </div>
