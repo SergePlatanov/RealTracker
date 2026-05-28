@@ -16,7 +16,7 @@
 </script>
 
 <template>
-    <div class="flex font-sans">
+    <div class="flex font-sans h-27">
         <div class="flex-none w-48 relative">
             <img :src="img" alt="" class="absolute inset-0 w-full h-full object-cover" loading="lazy" />
         </div>

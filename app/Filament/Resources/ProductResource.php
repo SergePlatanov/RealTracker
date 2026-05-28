@@ -57,6 +57,8 @@ class ProductResource extends Resource
                     ->label(__(static::$path))
                     ->image()
                     ->imageEditor()
+                    ->imageEditorViewportWidth('192')
+                    ->imageEditorViewportHeight('108')                    
                     ->required()
                     ->storeFileNamesIn('attachment_file_names')
                     ->maxSize(1024)

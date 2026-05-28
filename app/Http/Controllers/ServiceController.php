@@ -46,7 +46,7 @@ class ServiceController extends Controller
             'name' => 'required',
             'description' => 'required',
         ]);
-        
+
         Event::find($id)->fill($request->post())->save();
 
         return redirect()->route('service')->with('success','Event has been updated successfully');
@@ -69,7 +69,7 @@ class ServiceController extends Controller
         ]);
 
         Log::debug($request->post());
-        
+
         Event::create($request->post());
 
         return redirect()->route('service')->with('success','Event has been created successfully.');

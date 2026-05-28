@@ -70,7 +70,7 @@ class UsersController extends Controller
 
         $user= User::create($request->post());
         $user->syncRoles($request->get('role'));
- 
+
         return redirect()->route('users.index')
             ->withSuccess(__('User created successfully.'));
     }
