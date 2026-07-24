@@ -6,6 +6,7 @@
     import Statistic from '@/Components/Statistic.vue';
     import { ref, computed, onBeforeMount, onMounted, onBeforeUnmount, onUnmounted, nextTick } from 'vue';
     import {useMainStore} from '@/Stores/MainStore.js';
+    import { debounce } from 'lodash-es';
 
     const mainStore = useMainStore();
 
@@ -93,7 +94,7 @@
         return el.sn_p * 10000000 + el.sn_m * 10000 + el.sn_n
     }
 
-    const update= _.debounce((e) => {
+    const update= debounce((e) => {
         if (searchTextProxy.value != searchText.value) searchTextProxy.value= searchText.value;
         if (searchSNProxy.value   != searchSN.value  ) searchSNProxy.value  = searchSN.value;
         if (searchFNProxy.value   != searchFN.value  ) searchFNProxy.value  = searchFN.value;
