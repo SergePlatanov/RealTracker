@@ -31,4 +31,6 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'blocked_browsers' => json_decode(env('BLOCKED_MIN_VERSIONS', '{}'), true) ?: [],
+
 ];
