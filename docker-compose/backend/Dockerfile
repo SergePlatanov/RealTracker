@@ -1,4 +1,8 @@
-FROM php:8.3-fpm
+FROM php:8.4-fpm
+
+# UID/GID пользователя на хосте (владельца bind-маунта), чтобы php-fpm мог писать в storage
+ARG HOST_UID=1000
+ARG HOST_GID=1000
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
@@ -9,14 +13,16 @@ RUN apt-get update && apt-get install -y \
     locales \
     libonig-dev \
     libxml2-dev \
+    libicu-dev \
     zip \
     libzip-dev \
     jpegoptim optipng pngquant gifsicle \
+    mariadb-client \
     vim \
     unzip \
     git \
     curl && \
-    pecl install xdebug-3.4.0 && \
+    pecl install xdebug && \
     docker-php-ext-enable xdebug && \
     docker-php-ext-install pdo_mysql pdo mbstring zip exif pcntl intl bcmath gd && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
@@ -25,27 +31,10 @@ RUN apt-get update && apt-get install -y \
     # Clear cache
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-ARG INSTALL_MYSQL_CLIENT=false
-
-RUN if [ ${INSTALL_MYSQL_CLIENT} = true ]; then \
-    apt-get update -yqq && \
-    apt-get -y install mariadb-client \
-;fi
-
-# Add user for laravel application
-RUN groupadd -g 1000 www && useradd -u 1000 -ms /bin/bash -g www www
-
-#WORKDIR /var/www
-#COPY . ./
-#RUN chown -R www:www-data /var/www
-
-WORKDIR /var/www/public
-RUN ln -s ../storage/app/public storage
-
-# Change current user to www
-# USER www
+# Add user for laravel application (uid/gid совпадают с хостовым пользователем bind-маунта)
+RUN groupadd -g ${HOST_GID} www && useradd -u ${HOST_UID} -ms /bin/bash -g www www && \
+    printf "[www]\nuser = www\ngroup = www\n" > /usr/local/etc/php-fpm.d/zz-realtracker.conf
 
 WORKDIR /var/www
-# Expose port 9000 and start php-fpm server
 EXPOSE 9000
 CMD ["php-fpm"]

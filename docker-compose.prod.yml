@@ -1,0 +1,19 @@
+# Production override.
+# Запуск: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# Требует: .env с прод-значениями (APP_ENV=production, HOST_UID/GID сервера),
+# сертификаты в docker-compose/nginx/certs/ (tracker.ntc.crt + tracker.ntc.key).
+services:
+  nginx:
+    ports:
+      - "443:443"
+    volumes:
+      # Тот же путь, что в dev-конфиге — перекрывает conf.d/
+      - ./docker-compose/nginx/conf.d.prod/:/etc/nginx/conf.d/
+      - ./docker-compose/nginx/certs:/etc/nginx/certs:ro
+
+  db:
+    volumes:
+      # Датадир MySQL в каталоге на хосте вместо именованного тома
+      # (перекрывает dbdata по целевому пути /var/lib/mysql).
+      # Владелец на хосте: 999:999 (пользователь mysql в контейнере).
+      - /opt/realtracker-data/mysql:/var/lib/mysql
