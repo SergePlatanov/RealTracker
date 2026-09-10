@@ -11,7 +11,10 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
+
+class User extends Authenticatable implements FilamentUser
 {
     use HasFactory, Notifiable, HasRoles;
 
@@ -45,16 +48,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    /**
-     * Always encrypt password when it is updated.
-     *
-     * @param $value
-     * @return string
-     */
-/*
-    public function setPasswordAttribute($value)
+    public function canAccessPanel(Panel $panel): bool
     {
-        $this->attributes['password'] = bcrypt($value);
+        // Запретить доступ пользователям с ролью 'blocked-role' или 'client'
+        //if ($this->hasAnyRole(['blocked-role', 'client'])) {
+        //    return false;
+        //}
+
+        // Или разрешить вход только конкретным ролям (альтернативный подход):
+        return $this->hasAnyRole(['admin', 'super user']);
+
+//        return true;
     }
-*/
 }

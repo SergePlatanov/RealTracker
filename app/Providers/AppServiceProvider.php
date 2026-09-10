@@ -3,7 +3,12 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rules\Password;
+use App\Models\Role;
+use App\Models\Permission;
+use App\Policies\RolePolicy;
+use App\Policies\PermissionPolicy;
 
 class AppServiceProvider extends ServiceProvider
 {

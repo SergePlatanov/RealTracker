@@ -23,10 +23,13 @@ use App\Http\Controllers\StatusController;
 use App\Http\Controllers\EventController;
 
 use Filament\FilamentManager;
-
-Route::group(['middleware' => ['auth','permission:reading']], function () {
-    Route::get('/products', [ProductController::class, 'index'])->name('products');
-    Route::get('/product/{id}', [ProductController::class, 'getProduct'])->name('product');
+/*
+Route::group(['middleware' => ['auth','permission:edit product']], function () {
+//    Route::get('/products', [ProductController::class, 'index'])->name('products');
+//    Route::get('/product/{id}', [ProductController::class, 'getProduct'])->name('product');
+    Route::resource('product', ProductController::class)->only([
+        'edit', 'create', 'update', 'store', 'destroy'
+    ]);
 });
 
 Route::group(['middleware' => ['permission:edit event']], function () {
@@ -35,7 +38,6 @@ Route::group(['middleware' => ['permission:edit event']], function () {
     ]);
 });
 
-/*
 Route::group(['middleware' => ['permission:edit users']], function () {
     Route::resource('users', UsersController::class);
     Route::resource('roles', RolesController::class);
@@ -50,8 +52,6 @@ Route::group(['middleware' => ['permission:edit product']], function () {
     Route::resource('status', StatusController::class)->only([
         'edit', 'create', 'update', 'store', 'destroy'
     ]);
-    
-    Route::resource('products', ProductController::class);
 });
 
 

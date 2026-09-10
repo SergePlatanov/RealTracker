@@ -13,23 +13,20 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+use App\Http\Controllers\ProductController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
 */
 
-
+/*
 $proxy_scheme = getenv('PROXY_SCHEME');
 
 if (!empty($proxy_scheme)) {
    URL::forceScheme($proxy_scheme);
-}
+}*/
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -41,6 +38,22 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+Route::group(['middleware' => ['permission:reading']], function () {
+    Route::get('/products', [ProductController::class, 'index'])->name('products');
+    Route::get('/product/{id}', [ProductController::class, 'getProduct'])->name('product');
+});
+
+Route::group(['middleware' => ['permission:edit event']], function () {
+    Route::resource('events', EventController::class)->only([
+        'edit', 'create', 'update', 'store', 'destroy'
+    ]);
+});
+
+Route::middleware(['auth', 'role:admin,super user'])->group(function () {
+    Route::resource('users', UsersController::class);
+    Route::resource('roles', RolesController::class);
+    Route::resource('permissions', PermissionsController::class);
+});
 
 /*
 Route::middleware('auth')->group(function () {
