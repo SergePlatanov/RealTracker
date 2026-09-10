@@ -1,37 +1,43 @@
 services:
 
-  # App контейнер
+  # App контейнер (PHP-FPM)
   app:
-    # Для установки нужных пакетов используем не чистый образ, а инструкции из конкретного файла Dockerfile
     build:
       context: .
-      args:
-        - INSTALL_MYSQL_CLIENT=${WORKSPACE_INSTALL_MYSQL_CLIENT}
       dockerfile: ./docker-compose/backend/Dockerfile
+      args:
+        HOST_UID: ${HOST_UID:-1000}
+        HOST_GID: ${HOST_GID:-1000}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     restart: unless-stopped
     tty: true
+    # Процессы (php-fpm, exec-команды) работают от uid/gid хостового пользователя,
+    # чтобы файлы в bind-маунте не становились root'овыми
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
     working_dir: /var/www
+    environment:
+      # Включение xdebug: XDEBUG_MODE=debug в .env или export перед docker compose up
+      XDEBUG_MODE: ${XDEBUG_MODE:-off}
     volumes:
-      - .:/var/www # Монтируем локальную папку в контейнер как /var/www
+      - .:/var/www
       - ./docker-compose/backend/php.ini:/usr/local/etc/php/php.ini
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     networks:
       - realtracker
 
   # Nginx контейнер для вебсервера
   nginx:
-    # Используем готовый образ для nginx контейнера
     image: nginx:alpine
     restart: unless-stopped
     tty: true
     ports:
-      - "80:80" # Внутренний порт контейнера пробрасываем на host машину
+      - "${NGINX_PORT:-80}:80"
     volumes:
-      - .:/var/www # Монтируем локальную папку в контейнер как /var/www
-      - ./docker-compose/nginx/conf.d/:/etc/nginx/conf.d/ # Передаем в контейнер конфигурационные файлы nginx
+      - .:/var/www
+      - ./docker-compose/nginx/conf.d/:/etc/nginx/conf.d/
     depends_on:
       - app
     networks:
@@ -39,52 +45,74 @@ services:
 
   # MySQL контейнер
   db:
-#    image: "mysql/mysql-server:8.0"
-    image: mysql:latest
+    image: mysql:8.4
     restart: unless-stopped
     tty: true
     ports:
-      - "3306:3306"
-    command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci'] #'--default-authentication-plugin=mysql_native_password']
+      # Наружу торчит только на localhost, чтобы не светить БД по сети
+      - "127.0.0.1:${DB_FORWARD_PORT:-3306}:3306"
+    command: ['--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
     environment:
-        MYSQL_DATABASE: '${DB_DATABASE}'
-        MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
-        MYSQL_PASSWORD: '${DB_PASSWORD}'
-        MYSQL_USER: '${DB_USERNAME}'
-        SERVICE_TAGS: dev
-        SERVICE_NAME: mysql
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_USER: '${DB_USERNAME}'
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
     volumes:
-      - dbdata:/var/lib/mysql # Используем именованный том из блока volumes
-      - ./docker-compose/mysql/my.cnf:/etc/mysql/my.cnf # Передаем в контейнер конфигурационный файл
+      - dbdata:/var/lib/mysql
+      - ./docker-compose/mysql/my.cnf:/etc/mysql/my.cnf
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping" ]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
     networks:
-       - realtracker
+      - realtracker
 
-  # Для сборки js
-  node:
+  # Vite dev-сервер с HMR (docker compose --profile dev up)
+  vite:
     build:
-        context: .
-        dockerfile: ./docker-compose/nodejs/Dockerfile
+      context: .
+      dockerfile: ./docker-compose/nodejs/Dockerfile
+      args:
+        HOST_UID: ${HOST_UID:-1000}
+        HOST_GID: ${HOST_GID:-1000}
     tty: true
+    profiles:
+      - dev
     ports:
-        - "5173:5173"
+      - "${VITE_PORT:-5173}:5173"
     working_dir: /var/www
+    command: sh -c "npm ci && npm run dev:serve"
     volumes:
-        - .:/var/www # Монтируем локальную папку в контейнер как /var/www
+      - .:/var/www
     networks:
-       - realtracker
+      - realtracker
+
+  # Разовая сборка ассетов для prod (docker compose --profile build run --rm assets)
+  assets:
+    build:
+      context: .
+      dockerfile: ./docker-compose/nodejs/Dockerfile
+      args:
+        HOST_UID: ${HOST_UID:-1000}
+        HOST_GID: ${HOST_GID:-1000}
+    profiles:
+      - build
+    working_dir: /var/www
+    command: sh -c "npm ci && npm run build"
+    volumes:
+      - .:/var/www
+    networks:
+      - realtracker
 
 networks:
-    realtracker:
-        driver: bridge
+  realtracker:
+    driver: bridge
 
 # Тома
 volumes:
   # Чтобы данные БД не пропадали после выключения создаем именованный том
   dbdata:
-    driver: local
-    driver_opts:
-      type: none
-      device: "./docker-compose/mysql/dbdata"
-      o: bind

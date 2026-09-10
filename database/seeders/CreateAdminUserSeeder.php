@@ -28,7 +28,10 @@ class CreateAdminUserSeeder extends Seeder
         ]);
     
         $role = Role::create(['name' => 'admin']);
-        Permission::create(['name' => 'edit users']);
+
+        foreach (['reading', 'edit event', 'edit users'] as $permission) {
+            Permission::firstOrCreate(['name' => $permission]);
+        }
 
         $permissions = Permission::pluck('id','id')->all();
            

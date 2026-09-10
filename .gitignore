@@ -3,8 +3,14 @@
 /public/build
 /public/hot
 /public/storage
+# Публикуемые ассеты вендоров (filament и др.), пересоздаются artisan-ом
+/public/css
+/public/fonts
+/public/js
+/public/image
 /storage/*.key
 /vendor
+/docker-compose/nginx/certs
 .env
 .env.backup
 .env.production
