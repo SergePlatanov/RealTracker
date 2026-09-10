@@ -68,14 +68,17 @@ class AdminPanelProvider extends PanelProvider
                 FilamentSpatieLaravelBackupPlugin::make()
                     ->timeout(120),
                 FilamentLogViewer::make()    
-//                    ->authorize(fn (): bool => auth()->user()->can('log viewer'))//can('log viewer'))
-                    ->authorize(true)
+                    ->authorize(fn (): bool => auth()->user()->hasRole('admin'))
+//                    ->authorize(true)
                     ->navigationGroup('Инструменты')
                     ->navigationIcon('heroicon-o-document-text')
                     ->navigationLabel('Log Viewer')
                     ->navigationSort(10)
                     ->navigationUrl('/logs'),
 //                    ->pollingTime(null), // Set to null to disable polling
+                FilamentSpatieLaravelBackupPlugin::make()
+                    // Разрешаем вход только тем, у кого есть право 'view-backups'
+                    ->authorize(fn (): bool => auth()->user()?->hasRole('admin') ?? false),
             ]);
     }
 }
