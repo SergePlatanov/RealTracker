@@ -23,42 +23,30 @@ use App\Http\Controllers\StatusController;
 use App\Http\Controllers\EventController;
 
 use Filament\FilamentManager;
-/*
-Route::group(['middleware' => ['auth','permission:edit product']], function () {
-//    Route::get('/products', [ProductController::class, 'index'])->name('products');
-//    Route::get('/product/{id}', [ProductController::class, 'getProduct'])->name('product');
-    Route::resource('product', ProductController::class)->only([
-        'edit', 'create', 'update', 'store', 'destroy'
-    ]);
+
+Route::middleware(['auth'])->group(function () {
+
+    Route::middleware(['permission:reading'])->group(function () {
+        Route::get('/products', [ProductController::class, 'index'])->name('products');
+        Route::get('/product/{id}', [ProductController::class, 'getProduct'])->name('product');
+    });
+
+    Route::middleware(['permission:edit event'])->group(function () {
+        Route::resource('events', EventController::class)->only([
+            'edit', 'create', 'update', 'store', 'destroy'
+        ]);
+    });
+
+    Route::middleware(['role:admin,super user'])->group(function () {
+        Route::resource('users', UsersController::class);
+        Route::resource('roles', RolesController::class);
+        Route::resource('permissions', PermissionsController::class);
+    });
+
+    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
+                ->name('logout');
 });
 
-Route::group(['middleware' => ['permission:edit event']], function () {
-    Route::resource('events', EventController::class)->only([
-        'edit', 'create', 'update', 'store', 'destroy'
-    ]);
-});
-
-Route::group(['middleware' => ['permission:edit users']], function () {
-    Route::resource('users', UsersController::class);
-    Route::resource('roles', RolesController::class);
-    Route::resource('permissions', PermissionsController::class);
-});
-
-Route::group(['middleware' => ['permission:edit product']], function () {
-    Route::resource('technos', TechnoController::class)->only([
-        'edit', 'create', 'update', 'store', 'destroy'
-    ]);
-    
-    Route::resource('status', StatusController::class)->only([
-        'edit', 'create', 'update', 'store', 'destroy'
-    ]);
-});
-
-
-Route::group(['middleware' => ['permission:edit techno']], function () {
-    Route::get('/service', [ServiceController::class, 'index'])->name('service');
-});
-*/
 Route::middleware('guest')->group(function () {
     Route::get('login', [AuthenticatedSessionController::class, 'create'])
                 ->name('login');
@@ -84,31 +72,3 @@ Route::middleware('guest')->group(function () {
                 ->name('password.store');*/
 });
 
-Route::group(['middleware' => ['auth']], function () {
-    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-                ->name('logout');
-});
-
-/*
-
-Route::group(['middleware' => ['auth', 'permission']], function () {
-    Route::get('verify-email', [EmailVerificationPromptController::class, '__invoke'])
-                ->name('verification.notice');
-
-    Route::get('verify-email/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
-                ->middleware(['signed', 'throttle:6,1'])
-                ->name('verification.verify');
-
-    Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-                ->middleware('throttle:6,1')
-                ->name('verification.send');
-
-    Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
-                ->name('password.confirm');
-
-    Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
-
-    Route::put('password', [PasswordController::class, 'update'])->name('password.update');
-
-});
-*/
