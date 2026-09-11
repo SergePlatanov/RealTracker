@@ -10,7 +10,7 @@ export default defineConfig({
             refresh: [
                 ...refreshPaths,
                 'app/Livewire/**',
-            ],            
+            ],
 
         }),
         vue({
@@ -34,6 +34,18 @@ export default defineConfig({
                 api: 'modern-compiler' // or "modern"
             }
         }
+    },
+    // Конфигурация для нетворкинга в докере
+    server: {
+        host: '0.0.0.0',
+        port: 5173,
+        strictPort: true,
+        watch: {
+            usePolling: true,
+        },
+        hmr: {
+            host: 'localhost',
+        },
     },
 
     // Solve: Some chunks are larger than 500 kB after minification
