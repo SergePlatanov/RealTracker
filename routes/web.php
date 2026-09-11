@@ -39,4 +39,8 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+Route::get('admin/login', function () {
+    return redirect()->route('login');
+})->name('filament.admin.auth.login'); // Сохраняем имя для обратной совместимости
+
 require __DIR__.'/auth.php';
