@@ -28,6 +28,31 @@ services:
     networks:
       - realtracker
 
+  # Планировщик (php artisan schedule:work): бэкапы и прочие задачи из routes/console.php.
+  # Тот же образ, что у app; xdebug выключен принудительно, чтобы отладка из .env
+  # не подвешивала ночные задачи.
+  scheduler:
+    build:
+      context: .
+      dockerfile: ./docker-compose/backend/Dockerfile
+      args:
+        HOST_UID: ${HOST_UID:-1000}
+        HOST_GID: ${HOST_GID:-1000}
+    restart: unless-stopped
+    user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+    working_dir: /var/www
+    command: php artisan schedule:work
+    environment:
+      XDEBUG_MODE: "off"
+    volumes:
+      - .:/var/www
+      - ./docker-compose/backend/php.ini:/usr/local/etc/php/php.ini
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - realtracker
+
   # Nginx контейнер для вебсервера
   nginx:
     image: nginx:alpine
