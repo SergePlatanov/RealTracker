@@ -26,8 +26,10 @@ return [
                  * The list of directories and files that will be included in the backup.
                  */
                 'include' => [
-                    // Сохраняем только БД + public storage
+                    // Сохраняем БД + public storage + private storage (включая sftp-ключи бэкапов) + .env
                     base_path('storage/app/public'),
+                    base_path('storage/app/private'),
+                    base_path('.env'),
                 ],
 
                 /*
@@ -35,7 +37,9 @@ return [
                  *
                  * Directories used by the backup process will automatically be excluded.
                  */
-                'exclude' => [],
+                'exclude' => [
+                    base_path('storage/app/private/RealTracker'), // Каталог с бэкапом
+                ],
 
                 /*
                  * Determines if symlinks should be followed.
