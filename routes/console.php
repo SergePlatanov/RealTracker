@@ -18,5 +18,6 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('backup:clean')->weekly();                        // Run the task every Sunday at 00:00.
-Schedule::command('backup:run --only-db')->weeklyOn(0, '3:00');     // Run the task every Sunday at 03:00.
+Schedule::command('backup:clean')->dailyAt('01:00');
+Schedule::command('backup:run')->dailyAt('02:00');
+Schedule::command('backup:monitor')->dailyAt('08:00');

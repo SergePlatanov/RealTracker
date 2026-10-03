@@ -13,7 +13,12 @@ Laravel 13 (PHP ^8.4), Filament 5 — админка на `/admin` (`app/Provide
 - Первый запуск: `composer install` → `php artisan key:generate` → `php artisan migrate` → `php artisan storage:link`
 - `.env` копируется из `.env.example` (уже настроен под Docker: `DB_HOST=db`). Обязательно выставить `HOST_UID`/`HOST_GID` равными `id -u`/`id -g`, затем пересобрать: `docker compose build`
 - Прод-сборка ассетов: `docker compose --profile build run --rm assets`
-- Xdebug выключен по умолчанию; включается `XDEBUG_MODE=debug` в `.env` (IDE слушает 9003)
+- Xdebug выключен по умолчанию; включается `XDEBUG_MODE=debug` в `.env` (IDE слушает 9003).
+
+### Планировщик и бэкапы
+
+- Контейнер `scheduler` (`php artisan schedule:work`) выполняет задачи из `routes/console.php` — он в базовом compose и стартует вместе с `app` без всяких профилей. Очередей в проекте нет (`QUEUE_CONNECTION=sync`); когда появятся — по той же схеме добавить контейнер `queue` с `php artisan queue:work`.
+- Бэкапы — spatie/laravel-backup, ежедневно: `backup:clean` 02:00, `backup:run` 03:00 (дамп БД gzip + `storage/app/public`), `backup:monitor` 08:00 (алерты на `BACKUP_MAIL_TO`). Хранятся на дисках из `BACKUP_DISKS` (через запятую): локально `local` (`storage/app/private`), в проде `local,sftp` — параметры SFTP в `BACKUP_SFTP_*`. Ручной запуск: `docker compose exec app php artisan backup:run` или из Filament `/admin` (там же восстановление через wnx/laravel-backup-restore).
 
 ## Грабли
 

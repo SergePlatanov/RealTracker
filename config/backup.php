@@ -1,5 +1,16 @@
 <?php
 
+use Spatie\DbDumper\Compressors\GzipCompressor;
+
+/*
+ * Диски, на которые складываются бэкапы (через запятую).
+ */
+$backupDisks = collect(explode(',', (string) env('BACKUP_DISKS', 'local')))
+    ->map(fn ($disk) => trim($disk))
+    ->filter()
+    ->values()
+    ->all();
+
 return [
 
     'backup' => [
@@ -15,7 +26,8 @@ return [
                  * The list of directories and files that will be included in the backup.
                  */
                 'include' => [
-                    base_path(),
+                    // Сохраняем только БД + public storage
+                    base_path('storage/app/public'),
                 ],
 
                 /*
@@ -23,11 +35,7 @@ return [
                  *
                  * Directories used by the backup process will automatically be excluded.
                  */
-                'exclude' => [
-                    base_path('vendor'),
-                    base_path('node_modules'),
-                    base_path('docker-compose/mysql/dbdata'),
-                ],
+                'exclude' => [],
 
                 /*
                  * Determines if symlinks should be followed.
@@ -151,9 +159,7 @@ return [
             /*
              * The disk names on which the backups will be stored.
              */
-            'disks' => [
-                'local',
-            ],
+            'disks' => $backupDisks,
         ],
 
         /*
@@ -256,9 +262,9 @@ return [
     'monitor_backups' => [
         [
             'name' => env('APP_NAME', 'laravel-backup'),
-            'disks' => ['local'],
+            'disks' => $backupDisks,
             'health_checks' => [
-                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumAgeInDays::class => 1,
+                \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumAgeInDays::class => 7,
                 \Spatie\Backup\Tasks\Monitor\HealthChecks\MaximumStorageInMegabytes::class => 5000,
             ],
         ],
