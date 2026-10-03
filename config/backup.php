@@ -1,12 +1,8 @@
 <?php
 
-use Spatie\DbDumper\Compressors\GzipCompressor;
-
-/*
- * Диски, на которые складываются бэкапы (через запятую).
- */
-$backupDisks = collect(explode(',', (string) env('BACKUP_DISKS', 'local')))
-    ->map(fn ($disk) => trim($disk))
+// Диски, на которые складываются бэкапы (через запятую).
+$backupDisks = collect(explode(',', (string)env('BACKUP_DISKS', 'local')))
+    ->map(fn($disk) => trim($disk))
     ->filter()
     ->values()
     ->all();
