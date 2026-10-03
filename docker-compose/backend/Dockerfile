@@ -1,4 +1,4 @@
-FROM php:8.4-fpm
+FROM php:8.4-fpm AS base
 
 # UID/GID пользователя на хосте (владельца bind-маунта), чтобы php-fpm мог писать в storage
 ARG HOST_UID=1000
@@ -22,8 +22,6 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl && \
-    pecl install xdebug && \
-    docker-php-ext-enable xdebug && \
     docker-php-ext-install pdo_mysql pdo mbstring zip exif pcntl intl bcmath gd && \
     docker-php-ext-configure gd --with-freetype --with-jpeg && \
     docker-php-ext-install gd && \
@@ -38,3 +36,7 @@ RUN groupadd -g ${HOST_GID} www && useradd -u ${HOST_UID} -ms /bin/bash -g www w
 WORKDIR /var/www
 EXPOSE 9000
 CMD ["php-fpm"]
+
+# xdebug только для dev: APP_BUILD_TARGET=dev в .env (прод собирает base — без xdebug)
+FROM base AS dev
+RUN pecl install xdebug && docker-php-ext-enable xdebug

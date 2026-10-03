@@ -13,7 +13,7 @@ Laravel 13 (PHP ^8.4), Filament 5 — админка на `/admin` (`app/Provide
 - Первый запуск: `composer install` → `php artisan key:generate` → `php artisan migrate` → `php artisan storage:link`
 - `.env` копируется из `.env.example` (уже настроен под Docker: `DB_HOST=db`). Обязательно выставить `HOST_UID`/`HOST_GID` равными `id -u`/`id -g`, затем пересобрать: `docker compose build`
 - Прод-сборка ассетов: `docker compose --profile build run --rm assets`
-- Xdebug выключен по умолчанию; включается `XDEBUG_MODE=debug` в `.env` (IDE слушает 9003).
+- Xdebug ставится в образ только для dev: `APP_BUILD_TARGET=dev` в `.env` (прод собирает target `base` без xdebug). Включение отладки: `APP_BUILD_TARGET=dev` + `XDEBUG_MODE=debug` в `.env` (IDE слушает 9003).
 
 ### Планировщик и бэкапы
 

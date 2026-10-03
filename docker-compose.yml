@@ -5,6 +5,8 @@ services:
     build:
       context: .
       dockerfile: ./docker-compose/backend/Dockerfile
+      # dev = с xdebug (APP_BUILD_TARGET=dev в .env), base = без него (прод)
+      target: ${APP_BUILD_TARGET:-base}
       args:
         HOST_UID: ${HOST_UID:-1000}
         HOST_GID: ${HOST_GID:-1000}
@@ -17,7 +19,7 @@ services:
     user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
     working_dir: /var/www
     environment:
-      # Включение xdebug: XDEBUG_MODE=debug в .env или export перед docker compose up
+      # Отладка: собрать образ с xdebug (APP_BUILD_TARGET=dev) и включить XDEBUG_MODE=debug в .env
       XDEBUG_MODE: ${XDEBUG_MODE:-off}
     volumes:
       - .:/var/www
@@ -35,6 +37,7 @@ services:
     build:
       context: .
       dockerfile: ./docker-compose/backend/Dockerfile
+      target: ${APP_BUILD_TARGET:-base}
       args:
         HOST_UID: ${HOST_UID:-1000}
         HOST_GID: ${HOST_GID:-1000}
